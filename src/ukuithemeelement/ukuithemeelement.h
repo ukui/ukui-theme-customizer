@@ -5,14 +5,6 @@
 #include <QAbstractItemView>
 #include <QAbstractTableModel>
 
-class UKUIIconView: public QAbstractItemView {
-    Q_OBJECT
-
-private:
-
-public:
-};
-
 class UKUIIconModel: public QAbstractTableModel {
     QVector <std::pair<QString,QString>> IconData;
 public:

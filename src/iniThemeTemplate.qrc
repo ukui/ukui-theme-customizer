@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>templates/control</file>
+        <file>templates/icon/postinst</file>
+        <file>templates/icon/postrm</file>
+        <file>templates/cursor/postinst</file>
+        <file>templates/cursor/prerm</file>
+    </qresource>
+</RCC>

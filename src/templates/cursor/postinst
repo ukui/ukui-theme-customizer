@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+# End automatically added section
+update-alternatives --install /usr/share/icons/default/index.theme \
+        x-cursor-theme /usr/share/icons/$NAME/cursor.theme 90
