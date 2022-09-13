@@ -11,7 +11,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # Find the QtWidgets library
-find_package(Qt5Widgets CONFIG REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 set(ukuithemecustomizer_SRC
   src/iniThemeTemplate.qrc
@@ -24,8 +24,12 @@ add_executable(ukuithemecustomizer ${ukuithemecustomizer_SRC})
 add_subdirectory(src/packagecreator/)
 add_subdirectory(src/ukuithemecustomizerwindow/)
 
-# Use the Widgets module from Qt 5.
-target_link_libraries(ukuithemecustomizer Qt5::Widgets)
+target_link_libraries(ukuithemecustomizer
+   Qt5::Core
+   Qt5::Widgets
+   packagecreator
+   ukuithemecustomizerwindow
+)
 
 # Install the executable
 install(TARGETS ukuithemecustomizer DESTINATION bin)
