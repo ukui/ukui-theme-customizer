@@ -8,6 +8,8 @@
 #include "../packagecreator/packagecreator.h"
 //#include "src/globalthemecreator/globalthemecreator.h"
 #include <QSettings>
+#include <QPushButton>
+#include <QDebug>
 
 namespace Ui
 {

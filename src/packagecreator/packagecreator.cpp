@@ -1,8 +1,8 @@
 #include "packagecreator.h"
 #include "ui_packagecreator.h"
 
-packageCreator::packageCreator()
-    : m_ui(new Ui::packageCreator)
+packageCreator::packageCreator(QWidget *parent)
+    : QDialog(parent), m_ui(new Ui::packageCreator)
 {
     m_ui->setupUi(this);
     connect(this, &packageCreator::accepted, this, &packageCreator::onAccepted);
@@ -10,15 +10,14 @@ packageCreator::packageCreator()
 
 packageCreator::~packageCreator() {}
 
-void iconThemePackage::ParseConfig() {
+void iconPackageCreator::parseConfig() {
     workDir.mkpath("usr/share/icons");
-    auto iconDir = workDir.current();
-    iconDir.cd("usr/share/icons");
-    QFile::copy(configFilePath, iconDir.filePath("index.ini"));
+    QDir iconDir(workDir.filePath("usr/share/icons"));
+    copy(configFilePath, iconDir.filePath("index.theme"));
 
     QSettings iconConfig(configFilePath, QSettings::Format::IniFormat);
     iconConfig.beginGroup("Icon Theme");
-    if (!iconConfig.contains("Name")) {
+    if (!iconConfig.contains("Name") || !iconConfig.contains("Directories")) {
         log("不合法的icon文件");
         return;
     }
@@ -27,12 +26,11 @@ void iconThemePackage::ParseConfig() {
     auto baseDir = info.dir();
 
     auto iconName = iconConfig.value("Name").toString();
-    log("正在为" + iconName + "打包...");
 
-    auto dirList = iconConfig.value("Directories").toString().split(',');
+    auto dirList = iconConfig.value("Directories").toStringList();
     for (auto dir = std::begin(dirList); dir != std::end(dirList); ++dir) {
-        if (baseDir.exists(*dir)) {
-            QFile::copy(baseDir.filePath(*dir), iconDir.filePath(QDir("*dir").dirName()));
+        if (*dir != "" && baseDir.exists(*dir)) {
+            copy(baseDir.filePath(*dir), iconDir.filePath(*dir));
         }
     }
     workDir.mkdir("DEBIAN");
@@ -43,8 +41,7 @@ void iconThemePackage::ParseConfig() {
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
 
-
-void themePackage::handleConfigFile(QString source, QString dest) {
+void packageCreator::handleConfigFile(const QString & source, const QString & dest) {
     QFile postInitSource(source),
           postInitDest(dest);
 
@@ -60,17 +57,55 @@ void themePackage::handleConfigFile(QString source, QString dest) {
                 .toLocal8Bit()
             );
     }
+    postInitSource.close();
+    postInitDest.close();
 }
 
+iconPackageCreator::iconPackageCreator(const QString& configFilePath, QWidget *parent)
+        : packageCreator(parent), configFilePath(configFilePath){}
 
-themePackage::themePackage ( const QString& name, const QString& maintainer, const QString& version, const QString& description, const QString& configFilePath ): name(name), maintainer(maintainer), version(version),
-    description(description), configFilePath(configFilePath)
-{
+void packageCreator::onAccepted() {
+    name = m_ui->name->text();
+    version = m_ui->version->text();
+    maintainer = m_ui->maintainer->text();
+    description = m_ui->description->toPlainText();
     if ( totalWorkDir.exists ( name ) ) {
         totalWorkDir.remove ( name );
     }
     totalWorkDir.mkdir ( name );
     workDir.setPath ( totalWorkDir.filePath ( name ) );
     workDir.mkdir ( "DEBIAN" );
+    this->parseConfig();
+    this->package();
+}
+
+void iconPackageCreator::package() {
+    QProcess packageProcess;
+    packageProcess.setWorkingDirectory(workDir.filePath(".."));
+    packageProcess.start("dpkg-deb", QStringList()<<"-b"<<name);
+    packageProcess.waitForFinished();
+    log(packageProcess.readAllStandardError());
+    log(packageProcess.readAllStandardOutput());
+}
+
+
+void packageCreator::copy(const QString& source, const QString& dest) {
+    if (QFile::exists(dest)) {
+        QFile::remove(dest);
+    }
+    log(source + "->" + dest);
+    QFileInfo sourceInfo(source);
+    if (sourceInfo.isDir()) {
+        QDir sourceDir(source), destDir(dest);
+        QDir().mkpath(dest);
+        auto sourceEntryList = sourceDir.entryInfoList();
+        for (auto i = std::begin(sourceEntryList); i != std::end(sourceEntryList); ++i) {
+            if (i->fileName() == "." || i->fileName() == "..") continue;
+            copy(i->filePath(), destDir.filePath(i->fileName()));
+        }
+    } else {
+        QFile::copy(source, dest);
+    }
+
 }
 
