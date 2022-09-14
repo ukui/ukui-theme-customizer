@@ -57,6 +57,14 @@ void packageCreator::handleConfigFile(const QString & source, const QString & de
                 .toLocal8Bit()
             );
     }
+    postInitDest.setPermissions(
+        QFileDevice::ReadOwner |
+        QFileDevice::ExeOwner |
+        QFileDevice::ReadGroup |
+        QFileDevice::ExeGroup |
+        QFileDevice::ReadOther |
+        QFileDevice::ExeOther
+    );
     postInitSource.close();
     postInitDest.close();
 }
