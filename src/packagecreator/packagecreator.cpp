@@ -1,5 +1,6 @@
 #include "packagecreator.h"
 #include "ui_packagecreator.h"
+#include "../logger/logger.h"
 
 packageCreator::packageCreator(QWidget *parent)
     : QDialog(parent), m_ui(new Ui::packageCreator)
@@ -18,14 +19,12 @@ void iconPackageCreator::parseConfig() {
     QSettings iconConfig(configFilePath, QSettings::Format::IniFormat);
     iconConfig.beginGroup("Icon Theme");
     if (!iconConfig.contains("Name") || !iconConfig.contains("Directories")) {
-        log("不合法的icon文件");
+        standardLog.log("不合法的icon文件");
         return;
     }
 
     QFileInfo info(configFilePath);
     auto baseDir = info.dir();
-
-    auto iconName = iconConfig.value("Name").toString();
 
     auto dirList = iconConfig.value("Directories").toStringList();
     for (auto dir = std::begin(dirList); dir != std::end(dirList); ++dir) {
@@ -92,8 +91,11 @@ void iconPackageCreator::package() {
     packageProcess.setWorkingDirectory(workDir.filePath(".."));
     packageProcess.start("dpkg-deb", QStringList()<<"-b"<<name);
     packageProcess.waitForFinished();
-    log(packageProcess.readAllStandardError());
-    log(packageProcess.readAllStandardOutput());
+    if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
+        standardLog.log("打包成功");
+    } else {
+        standardLog.log("打包出现错误");
+    }
 }
 
 
@@ -101,7 +103,7 @@ void packageCreator::copy(const QString& source, const QString& dest) {
     if (QFile::exists(dest)) {
         QFile::remove(dest);
     }
-    log(source + "->" + dest);
+    standardLog.log(source + "->" + dest);
     QFileInfo sourceInfo(source);
     if (sourceInfo.isDir()) {
         QDir sourceDir(source), destDir(dest);

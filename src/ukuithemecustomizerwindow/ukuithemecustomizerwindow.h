@@ -9,7 +9,7 @@
 //#include "src/globalthemecreator/globalthemecreator.h"
 #include <QSettings>
 #include <QPushButton>
-#include <QDebug>
+#include "../logger/logger.h"
 
 namespace Ui
 {
@@ -27,9 +27,10 @@ private:
     QScopedPointer<Ui::UKUIThemeCustomizer> m_ui;
     //UKUIIconModel globalThemeModel, wallpaperCollectionModel, iconModel,
     //              cursorModel, soundModel, gtkStyleModel, qtStyleModel;
-    //void log(const QString &message);
+
 private slots:
     void onIconAddPressed();
+    void updateLogBox(const QString & s);
 };
 
 #endif // UKUITHEMECUSTOMIZER_H

@@ -15,12 +15,7 @@ namespace Ui
 class packageCreator;
 }
 
-static auto totalWorkDir = QDir::current();
-
-template <typename T>
-static void log(const T & s) {
-    qDebug() << s;
-}
+static auto totalWorkDir = QDir(QDir::current().filePath("package"));
 
 class packageCreator : public QDialog
 {

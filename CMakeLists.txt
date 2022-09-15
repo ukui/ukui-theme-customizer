@@ -18,11 +18,14 @@ set(ukuithemecustomizer_SRC
   src/main.cpp
 )
 
+
 # Tell CMake to create the helloworld executable
 add_executable(ukuithemecustomizer ${ukuithemecustomizer_SRC})
 
 add_subdirectory(src/packagecreator/)
 add_subdirectory(src/ukuithemecustomizerwindow/)
+add_subdirectory(src/logger/)
+
 
 target_link_libraries(ukuithemecustomizer
    Qt5::Core
