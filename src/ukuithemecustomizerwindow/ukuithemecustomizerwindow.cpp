@@ -1,5 +1,6 @@
 #include "ukuithemecustomizerwindow.h"
 #include "ui_ukuithemecustomizerwindow.h"
+#include "../logger/logger.h"
 
 UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     QMainWindow(parent),
@@ -7,7 +8,7 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
 {
     m_ui->setupUi(this);
     connect(m_ui->iconAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onIconAddPressed);
-    connect(&standardLog, &logger::msgChanged, this, &UKUIThemeCustomizer::updateLogBox);
+    connect(&logger::getStandardLogger(), &logger::msgChanged, this, &UKUIThemeCustomizer::updateLogBox);
 }
 
 UKUIThemeCustomizer::~UKUIThemeCustomizer(){}
@@ -21,7 +22,7 @@ void UKUIThemeCustomizer::onIconAddPressed()
 }
 
 
-void UKUIThemeCustomizer::updateLogBox(const QString& s) {
+void UKUIThemeCustomizer::updateLogBox(QString s) {
     m_ui->logbox->setText(s);
 }
 

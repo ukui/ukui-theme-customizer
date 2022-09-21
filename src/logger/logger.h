@@ -10,15 +10,13 @@ signals:
     void msgChanged(const QString & s);
 
 public:
-    logger() = default;
-    ~logger() = default;
-    void log(const QString & s) {
-        if (s != m_msg) {
-            m_msg = s;
-            emit msgChanged(m_msg);
-        }
-    }
+    static logger & getStandardLogger();
+    logger();
+    ~logger();
+    void log(QString s);
+
+private:
     QString m_msg;
-}standardLog;
+};
 
 #endif // LOGGER_H

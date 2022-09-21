@@ -9,7 +9,6 @@
 //#include "src/globalthemecreator/globalthemecreator.h"
 #include <QSettings>
 #include <QPushButton>
-#include "../logger/logger.h"
 
 namespace Ui
 {
@@ -30,7 +29,7 @@ private:
 
 private slots:
     void onIconAddPressed();
-    void updateLogBox(const QString & s);
+    void updateLogBox(QString s);
 };
 
 #endif // UKUITHEMECUSTOMIZER_H

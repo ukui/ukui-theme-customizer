@@ -19,7 +19,7 @@ void iconPackageCreator::parseConfig() {
     QSettings iconConfig(configFilePath, QSettings::Format::IniFormat);
     iconConfig.beginGroup("Icon Theme");
     if (!iconConfig.contains("Name") || !iconConfig.contains("Directories")) {
-        standardLog.log("不合法的icon文件");
+        logger::getStandardLogger().log("不合法的icon文件");
         return;
     }
 
@@ -92,9 +92,9 @@ void iconPackageCreator::package() {
     packageProcess.start("dpkg-deb", QStringList()<<"-b"<<name);
     packageProcess.waitForFinished();
     if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
-        standardLog.log("打包成功");
+        logger::getStandardLogger().log("打包成功");
     } else {
-        standardLog.log("打包出现错误");
+        logger::getStandardLogger().log("打包出现错误");
     }
 }
 
@@ -103,7 +103,7 @@ void packageCreator::copy(const QString& source, const QString& dest) {
     if (QFile::exists(dest)) {
         QFile::remove(dest);
     }
-    standardLog.log(source + "->" + dest);
+    logger::getStandardLogger().log(source + "->" + dest);
     QFileInfo sourceInfo(source);
     if (sourceInfo.isDir()) {
         QDir sourceDir(source), destDir(dest);

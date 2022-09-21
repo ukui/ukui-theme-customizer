@@ -32,6 +32,7 @@ target_link_libraries(ukuithemecustomizer
    Qt5::Widgets
    packagecreator
    ukuithemecustomizerwindow
+   logger
 )
 
 # Install the executable
