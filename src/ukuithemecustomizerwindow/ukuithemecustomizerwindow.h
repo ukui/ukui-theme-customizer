@@ -4,11 +4,12 @@
 #include <QMainWindow>
 #include <QScopedPointer>
 #include <QFileDialog>
-//#include "src/ukuithemeelement/ukuithemeelement.h"
+#include "../ukuithemeelement/ukuithemeelement.h"
 #include "../packagecreator/packagecreator.h"
 //#include "src/globalthemecreator/globalthemecreator.h"
 #include <QSettings>
 #include <QPushButton>
+#include <iostream>
 
 namespace Ui
 {
@@ -24,8 +25,8 @@ public:
 
 private:
     QScopedPointer<Ui::UKUIThemeCustomizer> m_ui;
-    //UKUIIconModel globalThemeModel, wallpaperCollectionModel, iconModel,
-    //              cursorModel, soundModel, gtkStyleModel, qtStyleModel;
+    UKUIIconModel globalThemeModel, wallpaperCollectionModel, iconModel,
+                  cursorModel, soundModel, gtkStyleModel, qtStyleModel;
 
 private slots:
     void onIconAddPressed();

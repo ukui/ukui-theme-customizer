@@ -9,6 +9,8 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     m_ui->setupUi(this);
     connect(m_ui->iconAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onIconAddPressed);
     connect(&logger::getStandardLogger(), &logger::msgChanged, this, &UKUIThemeCustomizer::updateLogBox);
+
+    m_ui->iconView->setModel(&iconModel);
 }
 
 UKUIThemeCustomizer::~UKUIThemeCustomizer(){}
