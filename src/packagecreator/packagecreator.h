@@ -19,6 +19,9 @@ class packageCreator : public QDialog
 {
     Q_OBJECT
 
+signals:
+    void packageSuccess(const QFileInfo & info);
+
 public:
     packageCreator(QWidget *parent = nullptr);
     ~packageCreator();

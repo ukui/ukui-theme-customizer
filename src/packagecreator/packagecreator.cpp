@@ -1,6 +1,7 @@
 #include "packagecreator.h"
 #include "ui_packagecreator.h"
 #include "../settingmanager/settingmanager.h"
+#include "../ukuithemeelement/ukuithemeelement.h"
 
 packageCreator::packageCreator(QWidget *parent)
     : QDialog(parent), m_ui(new Ui::packageCreator)
@@ -89,6 +90,7 @@ void iconPackageCreator::package() {
     packageProcess.waitForFinished();
     if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
         logger::getStandardLogger().log("打包成功");
+        emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
     } else {
         logger::getStandardLogger().log("打包出现错误");
     }

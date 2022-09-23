@@ -6,4 +6,5 @@ target_link_libraries(ukuithemecustomizerwindow
     Qt5::Widgets
     Qt5::Core
     packagecreator
+    ukuithemeelement
 )
