@@ -1,5 +1,11 @@
 #include "ukuithemeelement.h"
 
+UKUIIconModel::UKUIIconModel(): workDir(settingManager::getSettings().iconDir()) {
+    workDir.setNameFilters(QStringList()<<"*.deb");
+    for (auto i : workDir.entryInfoList() ) {
+        addItem(i.baseName(), i.filePath());
+    }
+}
 
 QVariant UKUIIconModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid()) return QVariant();
@@ -14,5 +20,15 @@ QVariant UKUIIconModel::data(const QModelIndex& index, int role) const {
         }
     }
     return QVariant();
+}
+
+
+int UKUIIconModel::columnCount(const QModelIndex& parent) const {
+    return 2;
+}
+
+
+int UKUIIconModel::rowCount(const QModelIndex& parent) const {
+    return IconData.length();
 }
 
