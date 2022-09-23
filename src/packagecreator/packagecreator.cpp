@@ -1,6 +1,6 @@
 #include "packagecreator.h"
 #include "ui_packagecreator.h"
-#include "../logger/logger.h"
+#include "../settingmanager/settingmanager.h"
 
 packageCreator::packageCreator(QWidget *parent)
     : QDialog(parent), m_ui(new Ui::packageCreator)
@@ -76,11 +76,7 @@ void packageCreator::onAccepted() {
     version = m_ui->version->text();
     maintainer = m_ui->maintainer->text();
     description = m_ui->description->toPlainText();
-    if ( totalWorkDir.exists ( name ) ) {
-        totalWorkDir.remove ( name );
-    }
-    totalWorkDir.mkdir ( name );
-    workDir.setPath ( totalWorkDir.filePath ( name ) );
+    this->setWorkDir();
     workDir.mkdir ( "DEBIAN" );
     this->parseConfig();
     this->package();
@@ -116,6 +112,16 @@ void packageCreator::copy(const QString& source, const QString& dest) {
     } else {
         QFile::copy(source, dest);
     }
-
 }
+
+void iconPackageCreator::setWorkDir()
+{
+    auto iconDir = settingManager::getSettings().iconDir();
+    if ( iconDir.exists ( name ) ) {
+        iconDir.remove ( name );
+    }
+    iconDir.mkdir ( name );
+    workDir.setPath ( iconDir.filePath ( name ) );
+}
+
 

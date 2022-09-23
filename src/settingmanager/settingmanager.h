@@ -2,6 +2,11 @@
 #define LOGGER_H
 
 #include <QObject>
+#include <QFile>
+#include <QSettings>
+#include <QPointer>
+#include <QDir>
+#include <QFileInfo>
 
 class logger: public QObject
 {
@@ -12,11 +17,19 @@ signals:
 public:
     static logger & getStandardLogger();
     logger();
-    ~logger();
     void log(QString s);
 
 private:
     QString m_msg;
+};
+
+class settingManager {
+public:
+    settingManager();
+    static settingManager & getSettings();
+    QDir totalWorkDir;
+    QDir iconDir();
+    QDir cursorDir();
 };
 
 #endif // LOGGER_H

@@ -1,6 +1,6 @@
 #include "ukuithemecustomizerwindow.h"
 #include "ui_ukuithemecustomizerwindow.h"
-#include "../logger/logger.h"
+#include "../settingmanager/settingmanager.h"
 
 UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     QMainWindow(parent),

@@ -24,7 +24,7 @@ add_executable(ukuithemecustomizer ${ukuithemecustomizer_SRC})
 
 add_subdirectory(src/packagecreator/)
 add_subdirectory(src/ukuithemecustomizerwindow/)
-add_subdirectory(src/logger/)
+add_subdirectory(src/settingmanager/)
 add_subdirectory(src/ukuithemeelement/)
 
 target_link_libraries(ukuithemecustomizer
@@ -32,7 +32,8 @@ target_link_libraries(ukuithemecustomizer
    Qt5::Widgets
    packagecreator
    ukuithemecustomizerwindow
-   logger
+   settingmanager
+   ukuithemeelement
 )
 
 # Install the executable

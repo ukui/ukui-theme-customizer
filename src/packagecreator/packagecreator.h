@@ -15,8 +15,6 @@ namespace Ui
 class packageCreator;
 }
 
-static auto totalWorkDir = QDir(QDir::current().filePath("package"));
-
 class packageCreator : public QDialog
 {
     Q_OBJECT
@@ -30,6 +28,7 @@ protected:
     QDir workDir;
     virtual void parseConfig() = 0;
     virtual void package() = 0;
+    virtual void setWorkDir() = 0;
     void handleConfigFile(const QString & source, const QString & dest);
     void copy(const QString & source, const QString & dest);
 
@@ -45,6 +44,7 @@ public:
     iconPackageCreator(const QString & configFilePath, QWidget *parent);
     void parseConfig();
     void package();
+    void setWorkDir();
 private:
     QString configFilePath;
 };
