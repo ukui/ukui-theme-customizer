@@ -9,7 +9,6 @@
 //#include "src/globalthemecreator/globalthemecreator.h"
 #include <QSettings>
 #include <QPushButton>
-#include <iostream>
 
 namespace Ui
 {

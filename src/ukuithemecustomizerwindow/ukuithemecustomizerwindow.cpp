@@ -19,7 +19,7 @@ void UKUIThemeCustomizer::onIconAddPressed()
 {
     auto iconConfigFile = QFileDialog::getOpenFileName(this, tr("打开Theme文件"), "./", tr("Theme文件 (*.theme)"));
     if (iconConfigFile == "") return;
-    creator = new iconPackageCreator(iconConfigFile, this);
+    creator = new iconPackageCreator(iconConfigFile);
     connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info){
         iconModel.addItem(info.baseName(), info.absolutePath());
     });

@@ -5,8 +5,8 @@
 
 static QProcess packageProcess;
 
-packageCreator::packageCreator(QWidget *parent)
-    : QDialog(parent), m_ui(new Ui::packageCreator)
+packageCreator::packageCreator()
+    : m_ui(new Ui::packageCreator)
 {
     m_ui->setupUi(this);
     connect(this, &packageCreator::accepted, this, &packageCreator::onAccepted);
@@ -71,8 +71,8 @@ void packageCreator::handleConfigFile(const QString & source, const QString & de
     postInitDest.close();
 }
 
-iconPackageCreator::iconPackageCreator(const QString& configFilePath, QWidget *parent)
-        : packageCreator(parent), configFilePath(configFilePath){}
+iconPackageCreator::iconPackageCreator(const QString& configFilePath)
+        :configFilePath(configFilePath){}
 
 void packageCreator::onAccepted() {
     name = m_ui->name->text();

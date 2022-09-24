@@ -23,7 +23,7 @@ signals:
     void packageSuccess(const QFileInfo & info);
 
 public:
-    packageCreator(QWidget *parent = nullptr);
+    packageCreator();
     ~packageCreator();
 
 protected:
@@ -44,7 +44,7 @@ protected slots:
 
 class iconPackageCreator : public packageCreator {
 public:
-    iconPackageCreator(const QString & configFilePath, QWidget *parent);
+    iconPackageCreator(const QString & configFilePath);
     void parseConfig() override;
     void package() override;
     bool setWorkDir() override;
