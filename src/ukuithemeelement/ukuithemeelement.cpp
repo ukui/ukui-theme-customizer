@@ -37,6 +37,7 @@ int UKUIIconModel::rowCount(const QModelIndex &parent) const
 void UKUIIconModel::addItem(const QString &name, const QString &path)
 {
     IconData.append({name, path});
+    emit dataChanged(QAbstractTableModel::createIndex(IconData.size() - 1, 0), QAbstractTableModel::createIndex(IconData.size() - 1, 1));
 }
 
 void UKUIIconModel::deleteItem(const QModelIndexList &model)

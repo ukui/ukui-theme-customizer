@@ -12,6 +12,7 @@ class UKUIIconModel: public QAbstractTableModel {
     QDir workDir;
 public:
     UKUIIconModel();
+
     virtual QVariant data(const QModelIndex &index, int role) const override;
     void addItem(const QString & name, const QString & path);
     void deleteItem(const QModelIndexList & model);
