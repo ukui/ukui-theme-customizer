@@ -31,7 +31,7 @@ protected:
     QDir workDir;
     virtual void parseConfig() = 0;
     virtual void package() = 0;
-    virtual void setWorkDir() = 0;
+    virtual bool setWorkDir() = 0;
     void handleConfigFile(const QString & source, const QString & dest);
     void copy(const QString & source, const QString & dest);
 
@@ -45,9 +45,9 @@ protected slots:
 class iconPackageCreator : public packageCreator {
 public:
     iconPackageCreator(const QString & configFilePath, QWidget *parent);
-    void parseConfig();
-    void package();
-    void setWorkDir();
+    void parseConfig() override;
+    void package() override;
+    bool setWorkDir() override;
 private:
     QString configFilePath;
 };

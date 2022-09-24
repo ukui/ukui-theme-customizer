@@ -77,10 +77,13 @@ void packageCreator::onAccepted() {
     version = m_ui->version->text();
     maintainer = m_ui->maintainer->text();
     description = m_ui->description->toPlainText();
-    this->setWorkDir();
+    if (!setWorkDir()) {
+        logger::getStandardLogger().log("已存在同名包");
+        return;
+    }
     workDir.mkdir ( "DEBIAN" );
-    this->parseConfig();
-    this->package();
+    parseConfig();
+    package();
 }
 
 void iconPackageCreator::package() {
@@ -91,6 +94,7 @@ void iconPackageCreator::package() {
     if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
         logger::getStandardLogger().log("打包成功");
         emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
+
     } else {
         logger::getStandardLogger().log("打包出现错误");
     }
@@ -116,14 +120,15 @@ void packageCreator::copy(const QString& source, const QString& dest) {
     }
 }
 
-void iconPackageCreator::setWorkDir()
+bool iconPackageCreator::setWorkDir()
 {
     auto iconDir = settingManager::getSettings().iconDir();
+    if (iconDir.exists(name + ".deb"))
+        return false;
     if ( iconDir.exists ( name ) ) {
         iconDir.remove ( name );
     }
     iconDir.mkdir ( name );
     workDir.setPath ( iconDir.filePath ( name ) );
+    return true;
 }
-
-
