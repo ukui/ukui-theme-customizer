@@ -24,20 +24,25 @@ settingManager & settingManager::getSettings()
 settingManager::settingManager()
 {
     QPointer <QSettings> settingsFromFile;
-    if (QFile::exists("config.ini")) {
-        settingsFromFile = new QSettings("config.ini", QSettings::IniFormat);
-    } else if (QFile::exists("/etc/ukui-theme-customizer/config.ini")){
+    if (QFile::exists("/etc/ukui-theme-customizer/config.ini")){
         settingsFromFile = new QSettings("/etc/ukui-theme-customizer/config.ini", QSettings::IniFormat);
     } else {
-        throw("未读取到配置");
+        settingsFromFile = new QSettings("config.ini", QSettings::IniFormat);
     }
     auto filePath = settingsFromFile->value("workDirectory", "./").toString();
     if (!QFileInfo(filePath).isDir()) {
-        throw("非法工作目录");
+        QFile::remove(filePath);
+    }
+    if (!QFile::exists(filePath)) {
+        QDir().mkdir(filePath);
     }
     settings.totalWorkDir.setPath(filePath);
-    if (!QFileInfo(settings.totalWorkDir.filePath("icons")).isDir()) {
-        throw("非法工作目录: icons");
+
+    for (auto subDir : { "icons", "cursors", "wallpaperCollections"}) {
+        if (!QFileInfo(settings.totalWorkDir.filePath(subDir)).isDir()) {
+            QFile::remove(settings.totalWorkDir.filePath(subDir));
+        }
+        if (!settings.totalWorkDir.exists(subDir)) settings.totalWorkDir.mkdir(subDir);
     }
 }
 
