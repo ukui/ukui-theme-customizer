@@ -99,6 +99,7 @@ void iconPackageCreator::package()
         if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
             logger::getStandardLogger().log("打包成功");
             emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
+            workDir.removeRecursively();
         } else {
             logger::getStandardLogger().log("打包出现错误");
         }
