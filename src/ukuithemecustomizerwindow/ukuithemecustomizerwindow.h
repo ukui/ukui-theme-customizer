@@ -9,6 +9,7 @@
 //#include "src/globalthemecreator/globalthemecreator.h"
 #include <QSettings>
 #include <QPushButton>
+#include <QMutex>
 
 namespace Ui
 {
@@ -24,6 +25,7 @@ public:
 
 private:
     QPointer <packageCreator> creator;
+    QMutex creatorMutex;
     QScopedPointer<Ui::UKUIThemeCustomizer> m_ui;
     UKUIIconModel globalThemeModel, wallpaperCollectionModel, iconModel,
                   cursorModel, soundModel, gtkStyleModel, qtStyleModel;

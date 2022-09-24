@@ -19,9 +19,14 @@ void UKUIThemeCustomizer::onIconAddPressed()
 {
     auto iconConfigFile = QFileDialog::getOpenFileName(this, tr("打开Theme文件"), "./", tr("Theme文件 (*.theme)"));
     if (iconConfigFile == "") return;
+    if (!creatorMutex.try_lock()) {
+        logger::getStandardLogger().log("请等待当前任务完成");
+        return;
+    }
     creator = new iconPackageCreator(iconConfigFile);
     connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info){
         iconModel.addItem(info.baseName(), info.absolutePath());
+        creatorMutex.unlock();
     });
     creator->exec();
 }

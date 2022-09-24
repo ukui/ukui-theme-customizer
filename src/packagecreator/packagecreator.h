@@ -27,6 +27,7 @@ public:
     ~packageCreator();
 
 protected:
+    QProcess packageProcess;
     QString name, maintainer, version, description;
     QDir workDir;
     virtual void parseConfig() = 0;

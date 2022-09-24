@@ -3,8 +3,6 @@
 #include "../settingmanager/settingmanager.h"
 #include "../ukuithemeelement/ukuithemeelement.h"
 
-static QProcess packageProcess;
-
 packageCreator::packageCreator()
     : m_ui(new Ui::packageCreator)
 {
