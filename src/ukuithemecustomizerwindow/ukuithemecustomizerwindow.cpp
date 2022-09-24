@@ -13,7 +13,7 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     m_ui->iconView->setModel(&iconModel);
 }
 
-UKUIThemeCustomizer::~UKUIThemeCustomizer(){}
+UKUIThemeCustomizer::~UKUIThemeCustomizer() {}
 
 void UKUIThemeCustomizer::onIconAddPressed()
 {
@@ -24,7 +24,7 @@ void UKUIThemeCustomizer::onIconAddPressed()
         return;
     }
     creator = new iconPackageCreator(iconConfigFile);
-    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info){
+    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
         iconModel.addItem(info.baseName(), info.absolutePath());
         creatorMutex.unlock();
     });
@@ -32,7 +32,9 @@ void UKUIThemeCustomizer::onIconAddPressed()
 }
 
 
-void UKUIThemeCustomizer::updateLogBox(QString s) {
+void UKUIThemeCustomizer::updateLogBox(QString s)
+{
     m_ui->logbox->setText(s);
 }
 
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 

@@ -20,3 +20,4 @@ public:
 };
 
 #endif // UKUITHEMEELEMENT_H_INCLUDED
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; 

@@ -1,13 +1,15 @@
 #include "ukuithemeelement.h"
 
-UKUIIconModel::UKUIIconModel(): workDir(settingManager::getSettings().iconDir()) {
-    workDir.setNameFilters(QStringList()<<"*.deb");
-    for (auto i : workDir.entryInfoList() ) {
+UKUIIconModel::UKUIIconModel(): workDir(settingManager::getSettings().iconDir())
+{
+    workDir.setNameFilters(QStringList() << "*.deb");
+    for (auto i : workDir.entryInfoList()) {
         addItem(i.baseName(), i.filePath());
     }
 }
 
-QVariant UKUIIconModel::data(const QModelIndex& index, int role) const {
+QVariant UKUIIconModel::data(const QModelIndex &index, int role) const
+{
     if (!index.isValid()) return QVariant();
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
@@ -22,11 +24,13 @@ QVariant UKUIIconModel::data(const QModelIndex& index, int role) const {
     return QVariant();
 }
 
-int UKUIIconModel::columnCount(const QModelIndex& parent) const {
+int UKUIIconModel::columnCount(const QModelIndex &parent) const
+{
     return 2;
 }
 
-int UKUIIconModel::rowCount(const QModelIndex& parent) const {
+int UKUIIconModel::rowCount(const QModelIndex &parent) const
+{
     return IconData.length();
 }
 
@@ -43,3 +47,4 @@ void UKUIIconModel::deleteItem(const QModelIndexList &model)
 }
 
 
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 

@@ -26,3 +26,4 @@ private:
 };
 
 #endif // GLOBALTHEMECREATOR_H
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

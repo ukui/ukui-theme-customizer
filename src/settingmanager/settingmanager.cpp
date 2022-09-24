@@ -3,7 +3,8 @@
 static logger standardLog;
 static settingManager settings;
 
-void logger::log(QString s) {
+void logger::log(QString s)
+{
     if (s != m_msg) {
         m_msg = s;
         emit msgChanged(m_msg);
@@ -12,11 +13,12 @@ void logger::log(QString s) {
 
 logger::logger::logger() {}
 
-logger& logger::getStandardLogger() {
+logger &logger::getStandardLogger()
+{
     return standardLog;
 }
 
-settingManager & settingManager::getSettings()
+settingManager &settingManager::getSettings()
 {
     return settings;
 }
@@ -24,7 +26,7 @@ settingManager & settingManager::getSettings()
 settingManager::settingManager()
 {
     QPointer <QSettings> settingsFromFile;
-    if (QFile::exists("/etc/ukui-theme-customizer/config.ini")){
+    if (QFile::exists("/etc/ukui-theme-customizer/config.ini")) {
         settingsFromFile = new QSettings("/etc/ukui-theme-customizer/config.ini", QSettings::IniFormat);
     } else {
         settingsFromFile = new QSettings("config.ini", QSettings::IniFormat);
@@ -38,7 +40,9 @@ settingManager::settingManager()
     }
     settings.totalWorkDir.setPath(filePath);
 
-    for (auto subDir : { "icons", "cursors", "wallpaperCollections"}) {
+    for (auto subDir : {
+                "icons", "cursors", "wallpaperCollections"
+            }) {
         if (!QFileInfo(settings.totalWorkDir.filePath(subDir)).isDir()) {
             QFile::remove(settings.totalWorkDir.filePath(subDir));
         }
@@ -46,12 +50,15 @@ settingManager::settingManager()
     }
 }
 
-QDir settingManager::iconDir() {
+QDir settingManager::iconDir()
+{
     return QDir(totalWorkDir.filePath("icons"));
 }
 
 
-QDir settingManager::cursorDir() {
+QDir settingManager::cursorDir()
+{
     return QDir(totalWorkDir.filePath("cursors"));
 }
 
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 

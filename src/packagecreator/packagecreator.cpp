@@ -12,7 +12,8 @@ packageCreator::packageCreator()
 
 packageCreator::~packageCreator() {}
 
-void iconPackageCreator::parseConfig() {
+void iconPackageCreator::parseConfig()
+{
     workDir.mkpath("usr/share/icons");
     QDir iconDir(workDir.filePath("usr/share/icons"));
     copy(configFilePath, iconDir.filePath("index.theme"));
@@ -41,7 +42,8 @@ void iconPackageCreator::parseConfig() {
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
 
-void packageCreator::handleConfigFile(const QString & source, const QString & dest) {
+void packageCreator::handleConfigFile(const QString &source, const QString &dest)
+{
     QFile postInitSource(source),
           postInitDest(dest);
 
@@ -50,12 +52,12 @@ void packageCreator::handleConfigFile(const QString & source, const QString & de
 
     while (!postInitSource.atEnd()) {
         postInitDest.write(QString(postInitSource.readAll())
-                .replace("$NAME", name)
-                .replace("$MAINTAINER", maintainer)
-                .replace("$VERSION", version)
-                .replace("$DESCRIPTION", description)
-                .toLocal8Bit()
-            );
+                           .replace("$NAME", name)
+                           .replace("$MAINTAINER", maintainer)
+                           .replace("$VERSION", version)
+                           .replace("$DESCRIPTION", description)
+                           .toLocal8Bit()
+                          );
     }
     postInitDest.setPermissions(
         QFileDevice::ReadOwner |
@@ -69,10 +71,11 @@ void packageCreator::handleConfigFile(const QString & source, const QString & de
     postInitDest.close();
 }
 
-iconPackageCreator::iconPackageCreator(const QString& configFilePath)
-        :configFilePath(configFilePath){}
+iconPackageCreator::iconPackageCreator(const QString &configFilePath)
+    : configFilePath(configFilePath) {}
 
-void packageCreator::onAccepted() {
+void packageCreator::onAccepted()
+{
     name = m_ui->name->text();
     version = m_ui->version->text();
     maintainer = m_ui->maintainer->text();
@@ -81,18 +84,19 @@ void packageCreator::onAccepted() {
         logger::getStandardLogger().log("已存在同名包");
         return;
     }
-    workDir.mkdir ( "DEBIAN" );
+    workDir.mkdir("DEBIAN");
     parseConfig();
     package();
 }
 
-void iconPackageCreator::package() {
+void iconPackageCreator::package()
+{
     packageProcess.setWorkingDirectory(workDir.filePath(".."));
-    packageProcess.start("dpkg-deb", QStringList()<<"-b"<<name);
+    packageProcess.start("dpkg-deb", QStringList() << "-b" << name);
     logger::getStandardLogger().log("正在执行dpkg-deb");
     connect(&packageProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-     [=](int exitCode Q_DECL_UNUSED, QProcess::ExitStatus exitStatus Q_DECL_UNUSED){
-         if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
+    [ = ](int exitCode Q_DECL_UNUSED, QProcess::ExitStatus exitStatus Q_DECL_UNUSED) {
+        if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
             logger::getStandardLogger().log("打包成功");
             emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
         } else {
@@ -102,7 +106,8 @@ void iconPackageCreator::package() {
 }
 
 
-void packageCreator::copy(const QString& source, const QString& dest) {
+void packageCreator::copy(const QString &source, const QString &dest)
+{
     if (QFile::exists(dest)) {
         QFile::remove(dest);
     }
@@ -126,10 +131,11 @@ bool iconPackageCreator::setWorkDir()
     auto iconDir = settingManager::getSettings().iconDir();
     if (iconDir.exists(name + ".deb"))
         return false;
-    if ( iconDir.exists ( name ) ) {
-        iconDir.remove ( name );
+    if (iconDir.exists(name)) {
+        iconDir.remove(name);
     }
-    iconDir.mkdir ( name );
-    workDir.setPath ( iconDir.filePath ( name ) );
+    iconDir.mkdir(name);
+    workDir.setPath(iconDir.filePath(name));
     return true;
 }
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 
