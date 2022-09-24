@@ -3,6 +3,8 @@
 #include "../settingmanager/settingmanager.h"
 #include "../ukuithemeelement/ukuithemeelement.h"
 
+static QProcess packageProcess;
+
 packageCreator::packageCreator(QWidget *parent)
     : QDialog(parent), m_ui(new Ui::packageCreator)
 {
@@ -87,17 +89,18 @@ void packageCreator::onAccepted() {
 }
 
 void iconPackageCreator::package() {
-    QProcess packageProcess;
     packageProcess.setWorkingDirectory(workDir.filePath(".."));
     packageProcess.start("dpkg-deb", QStringList()<<"-b"<<name);
-    packageProcess.waitForFinished();
-    if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
-        logger::getStandardLogger().log("打包成功");
-        emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
-
-    } else {
-        logger::getStandardLogger().log("打包出现错误");
-    }
+    logger::getStandardLogger().log("正在执行dpkg-deb");
+    connect(&packageProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+     [=](int exitCode Q_DECL_UNUSED, QProcess::ExitStatus exitStatus Q_DECL_UNUSED){
+         if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
+            logger::getStandardLogger().log("打包成功");
+            emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
+        } else {
+            logger::getStandardLogger().log("打包出现错误");
+        }
+    });
 }
 
 
@@ -105,7 +108,7 @@ void packageCreator::copy(const QString& source, const QString& dest) {
     if (QFile::exists(dest)) {
         QFile::remove(dest);
     }
-    logger::getStandardLogger().log(source + "->" + dest);
+    logger::getStandardLogger().log("复制" + source + "->" + dest);
     QFileInfo sourceInfo(source);
     if (sourceInfo.isDir()) {
         QDir sourceDir(source), destDir(dest);

@@ -24,6 +24,7 @@ public:
     ~UKUIThemeCustomizer();
 
 private:
+    QPointer <packageCreator> creator;
     QScopedPointer<Ui::UKUIThemeCustomizer> m_ui;
     UKUIIconModel globalThemeModel, wallpaperCollectionModel, iconModel,
                   cursorModel, soundModel, gtkStyleModel, qtStyleModel;
