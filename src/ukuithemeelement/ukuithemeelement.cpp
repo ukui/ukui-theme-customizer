@@ -40,9 +40,10 @@ void UKUIIconModel::addItem(const QString &name, const QString &path)
     emit dataChanged(QAbstractTableModel::createIndex(IconData.size() - 1, 0), QAbstractTableModel::createIndex(IconData.size() - 1, 1));
 }
 
-void UKUIIconModel::deleteItem(const QModelIndexList &model)
+void UKUIIconModel::deleteItem(const QModelIndexList & list)
 {
-    for (auto i : model) {
+    for (auto i : list) {
+        QFile::remove(IconData[i.row()].second);
         IconData.remove(i.row());
     }
 }

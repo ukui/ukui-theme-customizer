@@ -46,7 +46,14 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="3">
-         <widget class="QListView" name="globalThemeView"/>
+         <widget class="QListView" name="globalThemeView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+          <property name="viewMode">
+           <enum>QListView::ListMode</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -63,7 +70,11 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="3">
-         <widget class="QListView" name="wallpaperCollectionView"/>
+         <widget class="QListView" name="wallpaperCollectionView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
          <widget class="QToolButton" name="wallpaperCollectionAdd">
@@ -94,7 +105,11 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="3">
-         <widget class="QListView" name="iconView"/>
+         <widget class="QListView" name="iconView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -111,7 +126,11 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="3">
-         <widget class="QListView" name="cursorView"/>
+         <widget class="QListView" name="cursorView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
          <widget class="QToolButton" name="cursorAdd">
@@ -128,7 +147,11 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_9">
         <item row="0" column="1" colspan="3">
-         <widget class="QListView" name="soundView"/>
+         <widget class="QListView" name="soundView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
         </item>
         <item row="3" column="2">
          <widget class="QToolButton" name="soundAdd">
@@ -166,7 +189,11 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="3">
-         <widget class="QListView" name="gtkStyleView"/>
+         <widget class="QListView" name="gtkStyleView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -190,7 +217,11 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="3">
-         <widget class="QListView" name="qtStyleView"/>
+         <widget class="QListView" name="qtStyleView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

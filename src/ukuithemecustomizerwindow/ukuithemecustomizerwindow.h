@@ -32,6 +32,7 @@ private:
 
 private slots:
     void onIconAddPressed();
+    void onIconDeletePressed();
     void updateLogBox(QString s);
 };
 
