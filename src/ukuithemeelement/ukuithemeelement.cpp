@@ -1,6 +1,6 @@
 #include "ukuithemeelement.h"
 
-UKUIIconModel::UKUIIconModel(): workDir(settingManager::getSettings().iconDir())
+UKUIThemeModel::UKUIThemeModel(const QDir & dir): workDir(dir)
 {
     workDir.setNameFilters(QStringList() << "*.deb");
     for (auto i : workDir.entryInfoList()) {
@@ -8,15 +8,15 @@ UKUIIconModel::UKUIIconModel(): workDir(settingManager::getSettings().iconDir())
     }
 }
 
-QVariant UKUIIconModel::data(const QModelIndex &index, int role) const
+QVariant UKUIThemeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case 0:
-            return IconData[index.row()].first;
+            return ThemeData[index.row()].first;
         case 1:
-            return IconData[index.row()].second;
+            return ThemeData[index.row()].second;
         default:
             return QVariant();
         }
@@ -24,29 +24,29 @@ QVariant UKUIIconModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-int UKUIIconModel::columnCount(const QModelIndex &parent) const
+int UKUIThemeModel::columnCount(const QModelIndex &parent) const
 {
     return 2;
 }
 
-int UKUIIconModel::rowCount(const QModelIndex &parent) const
+int UKUIThemeModel::rowCount(const QModelIndex &parent) const
 {
-    return IconData.length();
+    return ThemeData.length();
 }
 
-void UKUIIconModel::addItem(const QString &name, const QString &path)
+void UKUIThemeModel::addItem(const QString &name, const QString &path)
 {
-    IconData.append({name, path});
-    emit dataChanged(QAbstractTableModel::createIndex(IconData.size() - 1, 0), QAbstractTableModel::createIndex(IconData.size() - 1, 1));
+    ThemeData.append({name, path});
+    emit dataChanged(QAbstractTableModel::createIndex(ThemeData.size() - 1, 0), QAbstractTableModel::createIndex(ThemeData.size() - 1, 1));
 }
 
-void UKUIIconModel::deleteItem(const QModelIndexList & list)
+void UKUIThemeModel::deleteItem(const QModelIndexList & list)
 {
     for (auto i : list) {
-        QFile::remove(IconData[i.row()].second);
-        IconData.remove(i.row());
+        QFile::remove(ThemeData[i.row()].second);
+        ThemeData.remove(i.row());
     }
 }
 
 
-// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

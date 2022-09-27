@@ -43,7 +43,8 @@ protected slots:
     void onAccepted();
 };
 
-class iconPackageCreator : public packageCreator {
+class iconPackageCreator : public packageCreator
+{
 public:
     iconPackageCreator(const QString & configFilePath);
     void parseConfig() override;
@@ -53,5 +54,17 @@ private:
     QString configFilePath;
 };
 
+
+class cursorPackageCreator : public packageCreator
+{
+public:
+    cursorPackageCreator(const QString & configFilePath);
+    void parseConfig() override;
+    void package() override;
+    bool setWorkDir() override;
+private:
+    QString configFilePath;
+};
+
 #endif // PACKAGECREATOR_H
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; 
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

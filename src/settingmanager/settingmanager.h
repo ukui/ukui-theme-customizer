@@ -30,7 +30,12 @@ public:
     QDir totalWorkDir;
     QDir iconDir();
     QDir cursorDir();
+    QDir wallpaperCollectionDir();
+    QDir soundDir();
+    QDir qtStyleDir();
+    QDir gtkStyleDir();
+    QDir globalThemeDir();
 };
 
 #endif // LOGGER_H
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; 
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

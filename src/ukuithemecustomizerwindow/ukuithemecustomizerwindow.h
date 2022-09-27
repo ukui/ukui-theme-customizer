@@ -27,14 +27,16 @@ private:
     QPointer <packageCreator> creator;
     QMutex creatorMutex;
     QScopedPointer<Ui::UKUIThemeCustomizer> m_ui;
-    UKUIIconModel globalThemeModel, wallpaperCollectionModel, iconModel,
+    UKUIThemeModel globalThemeModel, wallpaperCollectionModel, iconModel,
                   cursorModel, soundModel, gtkStyleModel, qtStyleModel;
 
 private slots:
     void onIconAddPressed();
     void onIconDeletePressed();
+    void onCursorAddPressed();
+    void onCursorDeletePressed();
     void updateLogBox(QString s);
 };
 
 #endif // UKUITHEMECUSTOMIZER_H
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; 
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

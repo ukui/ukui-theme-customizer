@@ -41,7 +41,7 @@ settingManager::settingManager()
     settings.totalWorkDir.setPath(filePath);
 
     for (auto subDir : {
-                "icons", "cursors", "wallpaperCollections"
+                "icons", "cursors", "globalThemes", "wallpaperCollections", "gtkStyles", "qtStyles", "sounds"
             }) {
         if (!QFileInfo(settings.totalWorkDir.filePath(subDir)).isDir()) {
             QFile::remove(settings.totalWorkDir.filePath(subDir));
@@ -61,4 +61,29 @@ QDir settingManager::cursorDir()
     return QDir(totalWorkDir.filePath("cursors"));
 }
 
-// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 
+QDir settingManager::globalThemeDir()
+{
+    return QDir(totalWorkDir.filePath("globalThemes"));
+}
+
+QDir settingManager::wallpaperCollectionDir()
+{
+    return QDir(totalWorkDir.filePath("wallPaperCollections"));
+}
+
+QDir settingManager::gtkStyleDir()
+{
+    return QDir(totalWorkDir.filePath("gtkStyles"));
+}
+
+QDir settingManager::qtStyleDir()
+{
+    return QDir(totalWorkDir.filePath("qtStyles"));
+}
+
+QDir settingManager::soundDir()
+{
+    return QDir(totalWorkDir.filePath("sounds"));
+}
+
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

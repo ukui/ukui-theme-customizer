@@ -7,11 +7,11 @@
 #include "../settingmanager/settingmanager.h"
 #include <QDir>
 
-class UKUIIconModel: public QAbstractTableModel {
-    QVector <std::pair<QString,QString>> IconData;
+class UKUIThemeModel: public QAbstractTableModel {
+    QVector <std::pair<QString,QString>> ThemeData;
     QDir workDir;
 public:
-    UKUIIconModel();
+    UKUIThemeModel(const QDir & dir);
     virtual QVariant data(const QModelIndex &index, int role) const override;
     void addItem(const QString & name, const QString & path);
     void deleteItem(const QModelIndexList & list);
@@ -20,4 +20,4 @@ public:
 };
 
 #endif // UKUITHEMEELEMENT_H_INCLUDED
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; 
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

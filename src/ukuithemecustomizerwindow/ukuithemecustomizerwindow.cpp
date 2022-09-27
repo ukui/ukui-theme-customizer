@@ -4,7 +4,14 @@
 
 UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     QMainWindow(parent),
-    m_ui(new Ui::UKUIThemeCustomizer)
+    m_ui(new Ui::UKUIThemeCustomizer),
+    globalThemeModel(settingManager::getSettings().globalThemeDir()),
+    wallpaperCollectionModel(settingManager::getSettings().wallpaperCollectionDir()),
+    iconModel(settingManager::getSettings().iconDir()),
+    cursorModel(settingManager::getSettings().cursorDir()),
+    soundModel(settingManager::getSettings().soundDir()),
+    gtkStyleModel(settingManager::getSettings().gtkStyleDir()),
+    qtStyleModel(settingManager::getSettings().qtStyleDir())
 {
     m_ui->setupUi(this);
     connect(&logger::getStandardLogger(), &logger::msgChanged, this, &UKUIThemeCustomizer::updateLogBox);
@@ -12,9 +19,18 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     m_ui->iconView->setModel(&iconModel);
     connect(m_ui->iconAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onIconAddPressed);
     connect(m_ui->iconDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onIconDeletePressed);
+
+    m_ui->cursorView->setModel(&cursorModel);
+    connect(m_ui->cursorAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onCursorAddPressed);
+    connect(m_ui->cursorDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onCursorDeletePressed);
 }
 
 UKUIThemeCustomizer::~UKUIThemeCustomizer() {}
+
+void UKUIThemeCustomizer::updateLogBox(QString s)
+{
+    m_ui->logbox->setText(s);
+}
 
 void UKUIThemeCustomizer::onIconAddPressed()
 {
@@ -37,10 +53,25 @@ void UKUIThemeCustomizer::onIconDeletePressed()
     iconModel.deleteItem(m_ui->iconView->selectionModel()->selectedIndexes());
 }
 
-
-void UKUIThemeCustomizer::updateLogBox(QString s)
+void UKUIThemeCustomizer::onCursorAddPressed()
 {
-    m_ui->logbox->setText(s);
+    auto cursorConfigFile = QFileDialog::getOpenFileName(this, tr("打开Theme文件"), "./", tr("Theme文件 (*.theme)"));
+    if (cursorConfigFile == "") return;
+    if (!creatorMutex.try_lock()) {
+        logger::getStandardLogger().log("请等待当前任务完成");
+        return;
+    }
+    creator = new cursorPackageCreator(cursorConfigFile);
+    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
+        cursorModel.addItem(info.baseName(), info.absolutePath());
+        creatorMutex.unlock();
+    });
+    creator->exec();
 }
 
-// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 
+void UKUIThemeCustomizer::onCursorDeletePressed()
+{
+    cursorModel.deleteItem(m_ui->cursorView->selectionModel()->selectedIndexes());
+}
+
+// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
