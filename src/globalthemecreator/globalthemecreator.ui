@@ -29,28 +29,43 @@
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="5" column="1">
-        <widget class="QCheckBox" name="darkModeSupport">
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_10">
          <property name="text">
-          <string>支持</string>
+          <string>Qt风格2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>壁纸</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="wallpaperName"/>
+        <widget class="QComboBox" name="comboBox"/>
        </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="iconName"/>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_9">
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Qt风格</string>
+          <string>GTK风格</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="soundName"/>
+       <item row="8" column="1">
+        <widget class="QComboBox" name="qtNightStyle">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QComboBox" name="gtkStyle">
+         <property name="frame">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item row="0" column="1">
         <widget class="QLineEdit" name="themeName">
@@ -62,22 +77,58 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_6">
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_8">
          <property name="text">
-          <string>夜间模式支持</string>
+          <string>GTK风格2</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
+       <item row="7" column="1">
+        <widget class="QComboBox" name="qtStyle"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>壁纸文件名</string>
+          <string>声音</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QComboBox" name="cursorName"/>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="iconName"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="soundName"/>
+       </item>
+       <item row="6" column="1">
+        <widget class="QComboBox" name="gtkNightStyle">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="editable">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Qt风格</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>主题名</string>
+         </property>
+        </widget>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_4">
@@ -93,66 +144,8 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>GTK风格</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>声音</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QComboBox" name="qtStyle"/>
-       </item>
-       <item row="7" column="1">
-        <widget class="QComboBox" name="gtkNightStyle">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>GTK风格（夜间）</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QComboBox" name="gtkStyle"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>1</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>主题名</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Qt风格（夜间）</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QComboBox" name="qtNightStyle">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="cursorName"/>
        </item>
       </layout>
      </widget>
