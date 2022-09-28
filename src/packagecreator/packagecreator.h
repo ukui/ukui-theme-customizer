@@ -48,7 +48,6 @@ class iconPackageCreator : public packageCreator
 public:
     iconPackageCreator(const QString & configFilePath);
     void parseConfig() override;
-    void package() override;
     bool setWorkDir() override;
 private:
     QString configFilePath;
@@ -73,6 +72,16 @@ public:
     bool setWorkDir() override;
 private:
     QStringList imagePath;
+};
+
+class soundPackageCreator : public packageCreator
+{
+public:
+    soundPackageCreator(const QString & configFilePath);
+    void parseConfig() override;
+    bool setWorkDir() override;
+private:
+    QString configFilePath;
 };
 
 #endif // PACKAGECREATOR_H

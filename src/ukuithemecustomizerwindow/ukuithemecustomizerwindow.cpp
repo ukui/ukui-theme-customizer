@@ -27,6 +27,10 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     m_ui->wallpaperCollectionView->setModel(&wallpaperCollectionModel);
     connect(m_ui->wallpaperCollectionAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onWallpaperCollectionAddPressed);
     connect(m_ui->wallpaperCollectionDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onWallpaperCollectionDeletePressed);
+
+    m_ui->soundView->setModel(&soundModel);
+    connect(m_ui->soundAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onSoundAddPressed);
+    connect(m_ui->soundDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onSoundDeletePressed);
 }
 
 UKUIThemeCustomizer::~UKUIThemeCustomizer() {}
@@ -97,6 +101,27 @@ void UKUIThemeCustomizer::onWallpaperCollectionAddPressed()
 void UKUIThemeCustomizer::onWallpaperCollectionDeletePressed()
 {
     wallpaperCollectionModel.deleteItem(m_ui->wallpaperCollectionView->selectionModel()->selectedIndexes());
+}
+
+void UKUIThemeCustomizer::onSoundAddPressed()
+{
+    auto soundCollectionConfigFile = QFileDialog::getOpenFileName(this, tr("打开Theme文件"), "./", tr("Theme文件 (*.theme)"));
+    if (soundCollectionConfigFile == "") return;
+    if (!creatorMutex.try_lock()) {
+        logger::getStandardLogger().log("请等待当前任务完成");
+        return;
+    }
+    creator = new soundPackageCreator(soundCollectionConfigFile);
+    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
+        soundModel.addItem(info.baseName(), info.absolutePath());
+        creatorMutex.unlock();
+    });
+    creator->exec();
+}
+
+void UKUIThemeCustomizer::onSoundDeletePressed()
+{
+    soundModel.deleteItem(m_ui->soundView->selectionModel()->selectedIndexes());
 }
 
 // kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

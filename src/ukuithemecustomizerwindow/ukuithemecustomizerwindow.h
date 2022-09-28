@@ -37,6 +37,8 @@ private slots:
     void onCursorDeletePressed();
     void onWallpaperCollectionAddPressed();
     void onWallpaperCollectionDeletePressed();
+    void onSoundAddPressed();
+    void onSoundDeletePressed();
     void updateLogBox(QString s);
 };
 

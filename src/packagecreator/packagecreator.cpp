@@ -96,23 +96,6 @@ void packageCreator::package()
 iconPackageCreator::iconPackageCreator(const QString &configFilePath)
     : configFilePath(configFilePath) {}
 
-void iconPackageCreator::package()
-{
-    packageProcess.setWorkingDirectory(workDir.filePath(".."));
-    packageProcess.start("dpkg-deb", QStringList() << "-b" << name);
-    logger::getStandardLogger().log("正在执行dpkg-deb");
-    connect(&packageProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-    [ = ](int exitCode Q_DECL_UNUSED, QProcess::ExitStatus exitStatus Q_DECL_UNUSED) {
-        if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
-            logger::getStandardLogger().log("打包成功");
-            emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
-            workDir.removeRecursively();
-        } else {
-            logger::getStandardLogger().log("打包出现错误");
-        }
-    });
-}
-
 bool iconPackageCreator::setWorkDir()
 {
     auto iconDir = settingManager::getSettings().iconDir();
@@ -220,4 +203,50 @@ void wallpaperCollectionPackageCreator::parseConfig()
 
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
+
+
+soundPackageCreator::soundPackageCreator(const QString &configFilePath)
+    : configFilePath(configFilePath) {}
+
+bool soundPackageCreator::setWorkDir()
+{
+    auto soundDir = settingManager::getSettings().soundDir();
+    if (soundDir.exists(name + ".deb"))
+        return false;
+    if (soundDir.exists(name)) {
+        soundDir.remove(name);
+    }
+    soundDir.mkdir(name);
+    workDir.setPath(soundDir.filePath(name));
+    return true;
+}
+
+void soundPackageCreator::parseConfig()
+{
+    workDir.mkpath("usr/share/sounds/" + name);
+    QDir soundDir(workDir.filePath("usr/share/sounds/" + name));
+    copy(configFilePath, soundDir.filePath("index.theme"));
+
+    QSettings soundConfig(configFilePath, QSettings::Format::IniFormat);
+    soundConfig.beginGroup("Sound Theme");
+    if (!soundConfig.contains("Name") || !soundConfig.contains("Directories")) {
+        logger::getStandardLogger().log("不合法的sound文件");
+        return;
+    }
+
+    QFileInfo info(configFilePath);
+    auto baseDir = info.dir();
+
+    auto dirList = soundConfig.value("Directories").toStringList();
+    for (auto dir = std::begin(dirList); dir != std::end(dirList); ++dir) {
+        if (*dir != "" && baseDir.exists(*dir)) {
+            copy(baseDir.filePath(*dir), soundDir.filePath(*dir));
+        }
+    }
+    workDir.mkdir("DEBIAN");
+    QDir controlPath(workDir.filePath("DEBIAN"));
+
+    handleConfigFile(":/templates/control", controlPath.filePath("control"));
+}
+
 // kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
