@@ -35,6 +35,8 @@ private slots:
     void onIconDeletePressed();
     void onCursorAddPressed();
     void onCursorDeletePressed();
+    void onWallpaperCollectionAddPressed();
+    void onWallpaperCollectionDeletePressed();
     void updateLogBox(QString s);
 };
 

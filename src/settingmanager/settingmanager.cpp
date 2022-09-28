@@ -68,7 +68,7 @@ QDir settingManager::globalThemeDir()
 
 QDir settingManager::wallpaperCollectionDir()
 {
-    return QDir(totalWorkDir.filePath("wallPaperCollections"));
+    return QDir(totalWorkDir.filePath("wallpaperCollections"));
 }
 
 QDir settingManager::gtkStyleDir()

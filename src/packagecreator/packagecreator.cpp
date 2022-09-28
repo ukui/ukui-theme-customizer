@@ -76,6 +76,23 @@ void packageCreator::copy(const QString &source, const QString &dest)
     }
 }
 
+void packageCreator::package()
+{
+    packageProcess.setWorkingDirectory(workDir.filePath(".."));
+    packageProcess.start("dpkg-deb", QStringList() << "-b" << name);
+    logger::getStandardLogger().log("正在执行dpkg-deb");
+    connect(&packageProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+    [ = ](int exitCode Q_DECL_UNUSED, QProcess::ExitStatus exitStatus Q_DECL_UNUSED) {
+        if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
+            logger::getStandardLogger().log("打包成功");
+            emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
+            workDir.removeRecursively();
+        } else {
+            logger::getStandardLogger().log("打包出现错误");
+        }
+    });
+}
+
 iconPackageCreator::iconPackageCreator(const QString &configFilePath)
     : configFilePath(configFilePath) {}
 
@@ -142,23 +159,6 @@ void iconPackageCreator::parseConfig()
 cursorPackageCreator::cursorPackageCreator(const QString &configFilePath)
     : configFilePath(configFilePath) {}
 
-void cursorPackageCreator::package()
-{
-    packageProcess.setWorkingDirectory(workDir.filePath(".."));
-    packageProcess.start("dpkg-deb", QStringList() << "-b" << name);
-    logger::getStandardLogger().log("正在执行dpkg-deb");
-    connect(&packageProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-    [ = ](int exitCode Q_DECL_UNUSED, QProcess::ExitStatus exitStatus Q_DECL_UNUSED) {
-        if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
-            logger::getStandardLogger().log("打包成功");
-            emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
-            workDir.removeRecursively();
-        } else {
-            logger::getStandardLogger().log("打包出现错误");
-        }
-    });
-}
-
 bool cursorPackageCreator::setWorkDir()
 {
     auto cursorDir = settingManager::getSettings().cursorDir();
@@ -189,6 +189,35 @@ void cursorPackageCreator::parseConfig()
 
     handleConfigFile(":/templates/cursor/postinst", controlPath.filePath("postinst"));
     handleConfigFile(":/templates/cursor/prerm", controlPath.filePath("postrm"));
+    handleConfigFile(":/templates/control", controlPath.filePath("control"));
+}
+
+wallpaperCollectionPackageCreator::wallpaperCollectionPackageCreator(const QStringList& imagePath) : imagePath(imagePath){}
+
+bool wallpaperCollectionPackageCreator::setWorkDir()
+{
+    auto wallpaperCollectionDir = settingManager::getSettings().wallpaperCollectionDir();
+    if (wallpaperCollectionDir.exists(name + ".deb"))
+        return false;
+    if (wallpaperCollectionDir.exists(name)) {
+        wallpaperCollectionDir.remove(name);
+    }
+    wallpaperCollectionDir.mkdir(name);
+    workDir.setPath(wallpaperCollectionDir.filePath(name));
+    return true;
+}
+
+void wallpaperCollectionPackageCreator::parseConfig()
+{
+    workDir.mkpath("usr/share/backgrounds/");
+
+    for (auto picture : imagePath) {
+        QFile::copy(picture, workDir.filePath("usr/share/backgrounds/" + QFileInfo(picture).fileName()));
+    }
+
+    workDir.mkdir("DEBIAN");
+    QDir controlPath(workDir.filePath("DEBIAN"));
+
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
 // kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

@@ -31,10 +31,10 @@ protected:
     QString name, maintainer, version, description;
     QDir workDir;
     virtual void parseConfig() = 0;
-    virtual void package() = 0;
     virtual bool setWorkDir() = 0;
     void handleConfigFile(const QString & source, const QString & dest);
     void copy(const QString & source, const QString & dest);
+    virtual void package();
 
 private:
     QScopedPointer<Ui::packageCreator> m_ui;
@@ -60,10 +60,19 @@ class cursorPackageCreator : public packageCreator
 public:
     cursorPackageCreator(const QString & configFilePath);
     void parseConfig() override;
-    void package() override;
     bool setWorkDir() override;
 private:
     QString configFilePath;
+};
+
+class wallpaperCollectionPackageCreator : public packageCreator
+{
+public:
+    wallpaperCollectionPackageCreator(const QStringList & imagePath);
+    void parseConfig() override;
+    bool setWorkDir() override;
+private:
+    QStringList imagePath;
 };
 
 #endif // PACKAGECREATOR_H

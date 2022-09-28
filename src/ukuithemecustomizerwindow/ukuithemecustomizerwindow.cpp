@@ -23,6 +23,10 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     m_ui->cursorView->setModel(&cursorModel);
     connect(m_ui->cursorAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onCursorAddPressed);
     connect(m_ui->cursorDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onCursorDeletePressed);
+
+    m_ui->wallpaperCollectionView->setModel(&wallpaperCollectionModel);
+    connect(m_ui->wallpaperCollectionAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onWallpaperCollectionAddPressed);
+    connect(m_ui->wallpaperCollectionDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onWallpaperCollectionDeletePressed);
 }
 
 UKUIThemeCustomizer::~UKUIThemeCustomizer() {}
@@ -72,6 +76,27 @@ void UKUIThemeCustomizer::onCursorAddPressed()
 void UKUIThemeCustomizer::onCursorDeletePressed()
 {
     cursorModel.deleteItem(m_ui->cursorView->selectionModel()->selectedIndexes());
+}
+
+void UKUIThemeCustomizer::onWallpaperCollectionAddPressed()
+{
+    auto wallpaperCollectionList = QFileDialog::getOpenFileNames(this, tr("打开图片文件"), "./", tr("图片文件 (*.png *.jpg)"));
+    if (wallpaperCollectionList.empty()) return;
+    if (!creatorMutex.try_lock()) {
+        logger::getStandardLogger().log("请等待当前任务完成");
+        return;
+    }
+    creator = new wallpaperCollectionPackageCreator(wallpaperCollectionList);
+    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
+        wallpaperCollectionModel.addItem(info.baseName(), info.absolutePath());
+        creatorMutex.unlock();
+    });
+    creator->exec();
+}
+
+void UKUIThemeCustomizer::onWallpaperCollectionDeletePressed()
+{
+    wallpaperCollectionModel.deleteItem(m_ui->wallpaperCollectionView->selectionModel()->selectedIndexes());
 }
 
 // kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
