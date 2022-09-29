@@ -1,6 +1,7 @@
 #include "ukuithemecustomizerwindow.h"
 #include "ui_ukuithemecustomizerwindow.h"
 #include "../settingmanager/settingmanager.h"
+#include <QMessageBox>
 
 UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     QMainWindow(parent),
@@ -31,6 +32,14 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     m_ui->soundView->setModel(&soundModel);
     connect(m_ui->soundAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onSoundAddPressed);
     connect(m_ui->soundDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onSoundDeletePressed);
+
+    m_ui->gtkStyleView->setModel(&gtkStyleModel);
+    connect(m_ui->gtkStyleAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::unsupportNow);
+    connect(m_ui->gtkStyleDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onSoundDeletePressed);
+
+    m_ui->qtStyleView->setModel(&qtStyleModel);
+    connect(m_ui->qtStyleAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::unsupportNow);
+    connect(m_ui->qtStyleDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onSoundDeletePressed);
 }
 
 UKUIThemeCustomizer::~UKUIThemeCustomizer() {}
@@ -122,6 +131,23 @@ void UKUIThemeCustomizer::onSoundAddPressed()
 void UKUIThemeCustomizer::onSoundDeletePressed()
 {
     soundModel.deleteItem(m_ui->soundView->selectionModel()->selectedIndexes());
+}
+
+void UKUIThemeCustomizer::unsupportNow()
+{
+    QMessageBox msgBox;
+    msgBox.setText("暂不支持此功能，请添加现有文件");
+    msgBox.exec();
+}
+
+void UKUIThemeCustomizer::onGtkStyleDeletePressed()
+{
+    gtkStyleModel.deleteItem(m_ui->gtkStyleView->selectionModel()->selectedIndexes());
+}
+
+void UKUIThemeCustomizer::onQtStyleDeletePressed()
+{
+    qtStyleModel.deleteItem(m_ui->qtStyleView->selectionModel()->selectedIndexes());
 }
 
 // kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

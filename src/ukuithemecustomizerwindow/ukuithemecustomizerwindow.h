@@ -39,6 +39,9 @@ private slots:
     void onWallpaperCollectionDeletePressed();
     void onSoundAddPressed();
     void onSoundDeletePressed();
+    void unsupportNow();
+    void onGtkStyleDeletePressed();
+    void onQtStyleDeletePressed();
     void updateLogBox(QString s);
 };
 
