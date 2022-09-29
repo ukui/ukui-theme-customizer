@@ -26,6 +26,7 @@ add_subdirectory(src/packagecreator/)
 add_subdirectory(src/ukuithemecustomizerwindow/)
 add_subdirectory(src/settingmanager/)
 add_subdirectory(src/ukuithemeelement/)
+add_subdirectory(src/globalthemecreator/)
 
 target_link_libraries(ukuithemecustomizer
    Qt5::Core
@@ -34,6 +35,7 @@ target_link_libraries(ukuithemecustomizer
    ukuithemecustomizerwindow
    settingmanager
    ukuithemeelement
+   globalthemecreator
 )
 
 # Install the executable

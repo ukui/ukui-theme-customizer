@@ -18,6 +18,11 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent) :
     m_ui->setupUi(this);
     connect(&logger::getStandardLogger(), &logger::msgChanged, this, &UKUIThemeCustomizer::updateLogBox);
 
+    m_ui->globalThemeView->setModel(&globalThemeModel);
+    connect(m_ui->globalThemeAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onGlobalThemeAddPressed);
+    connect(m_ui->globalThemeDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onGlobalThemeDeletePressed);
+    connect(m_ui->iconAddExisting, &QPushButton::pressed, this, &UKUIThemeCustomizer::onGlobalThemeAddExistingPressed);
+
     m_ui->iconView->setModel(&iconModel);
     connect(m_ui->iconAdd, &QPushButton::pressed, this, &UKUIThemeCustomizer::onIconAddPressed);
     connect(m_ui->iconDel, &QPushButton::pressed, this, &UKUIThemeCustomizer::onIconDeletePressed);
@@ -270,6 +275,42 @@ void UKUIThemeCustomizer::onQtStyleAddExistingPressed()
         QFile::copy(debFileInfo.filePath(), settingManager::getSettings().qtStyleDir().filePath(name + ".deb"));
     }
     qtStyleModel.addItem(name, settingManager::getSettings().qtStyleDir().filePath(name + ".deb"));
+}
+
+void UKUIThemeCustomizer::onGlobalThemeAddExistingPressed()
+{
+    auto debFile = QFileDialog::getOpenFileName(this, tr("打开Debian包"), "./", tr("deb文件 (*.deb)"));
+    if (debFile == "") return;
+    QFileInfo debFileInfo(debFile);
+
+     bool ok;
+     QString name = QInputDialog::getText(this, tr("添加现有文件"),
+                                          tr("输入主题名，留空保持现有名字"), QLineEdit::Normal,
+                                          "", &ok);
+    if (!ok) return;
+    if (name == "") name = debFileInfo.baseName();
+
+    if (!settingManager::getSettings().globalThemeDir().exists(name + ".deb")) {
+        QFile::copy(debFileInfo.filePath(), settingManager::getSettings().globalThemeDir().filePath(name + ".deb"));
+    }
+    qtStyleModel.addItem(name, settingManager::getSettings().globalThemeDir().filePath(name + ".deb"));
+}
+
+void UKUIThemeCustomizer::onGlobalThemeAddPressed()
+{
+    globalThemeCreator creator(&wallpaperCollectionModel,
+                               &iconModel,
+                               &cursorModel,
+                               &soundModel,
+                               &gtkStyleModel,
+                               &qtStyleModel
+    );
+    creator.exec();
+}
+
+void UKUIThemeCustomizer::onGlobalThemeDeletePressed()
+{
+    globalThemeModel.deleteItem(m_ui->globalThemeView->selectionModel()->selectedIndexes());
 }
 
 // kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;

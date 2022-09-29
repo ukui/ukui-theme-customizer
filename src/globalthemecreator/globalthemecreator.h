@@ -3,24 +3,25 @@
 
 #include <QScopedPointer>
 #include <QDialog>
+#include "../ukuithemeelement/ukuithemeelement.h"
 
 namespace Ui
 {
 class globalThemeCreator;
 }
 
-/**
- * @todo write docs
- */
 class globalThemeCreator : public QDialog
 {
     Q_OBJECT
 
 public:
-    /**
-     * @todo write docs
-     */
-
+    globalThemeCreator(UKUIThemeModel * wallpaperCollectionModel,
+                       UKUIThemeModel * iconModel,
+                       UKUIThemeModel * cursorModel,
+                       UKUIThemeModel * soundModel,
+                       UKUIThemeModel * gtkStyleModel,
+                       UKUIThemeModel * qtStyleModel);
+    ~globalThemeCreator();
 private:
     QScopedPointer<Ui::globalThemeCreator> m_ui;
 };

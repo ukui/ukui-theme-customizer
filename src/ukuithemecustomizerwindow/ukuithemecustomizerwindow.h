@@ -6,7 +6,7 @@
 #include <QFileDialog>
 #include "../ukuithemeelement/ukuithemeelement.h"
 #include "../packagecreator/packagecreator.h"
-//#include "src/globalthemecreator/globalthemecreator.h"
+#include "../globalthemecreator/globalthemecreator.h"
 #include <QSettings>
 #include <QPushButton>
 #include <QMutex>
@@ -31,6 +31,9 @@ private:
                   cursorModel, soundModel, gtkStyleModel, qtStyleModel;
 
 private slots:
+    void onGlobalThemeAddPressed();
+    void onGlobalThemeDeletePressed();
+    void onGlobalThemeAddExistingPressed();
     void onIconAddPressed();
     void onIconDeletePressed();
     void onIconAddExistingPressed();
