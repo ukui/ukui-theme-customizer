@@ -33,15 +33,21 @@ private:
 private slots:
     void onIconAddPressed();
     void onIconDeletePressed();
+    void onIconAddExistingPressed();
     void onCursorAddPressed();
     void onCursorDeletePressed();
+    void onCursorAddExistingPressed();
     void onWallpaperCollectionAddPressed();
     void onWallpaperCollectionDeletePressed();
+    void onWallpaperCollectionAddExistingPressed();
     void onSoundAddPressed();
     void onSoundDeletePressed();
+    void onSoundAddExistingPressed();
     void unsupportNow();
     void onGtkStyleDeletePressed();
+    void onGtkStyleAddExistingPressed();
     void onQtStyleDeletePressed();
+    void onQtStyleAddExistingPressed();
     void updateLogBox(QString s);
 };
 
