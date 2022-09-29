@@ -1,15 +1,15 @@
 #ifndef UKUITHEMECUSTOMIZER_H
 #define UKUITHEMECUSTOMIZER_H
 
-#include <QMainWindow>
-#include <QScopedPointer>
-#include <QFileDialog>
-#include "../ukuithemeelement/ukuithemeelement.h"
-#include "../packagecreator/packagecreator.h"
 #include "../globalthemecreator/globalthemecreator.h"
-#include <QSettings>
-#include <QPushButton>
+#include "../packagecreator/packagecreator.h"
+#include "../ukuithemeelement/ukuithemeelement.h"
+#include <QFileDialog>
+#include <QMainWindow>
 #include <QMutex>
+#include <QPushButton>
+#include <QScopedPointer>
+#include <QSettings>
 
 namespace Ui
 {
@@ -24,11 +24,11 @@ public:
     ~UKUIThemeCustomizer();
 
 private:
-    QPointer <packageCreator> creator;
+    QPointer<packageCreator> creator;
     QMutex creatorMutex;
     QScopedPointer<Ui::UKUIThemeCustomizer> m_ui;
     UKUIThemeModel globalThemeModel, wallpaperCollectionModel, iconModel,
-                  cursorModel, soundModel, gtkStyleModel, qtStyleModel;
+                   cursorModel, soundModel, gtkStyleModel, qtStyleModel;
 
 private slots:
     void onGlobalThemeAddPressed();
@@ -55,4 +55,4 @@ private slots:
 };
 
 #endif // UKUITHEMECUSTOMIZER_H
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

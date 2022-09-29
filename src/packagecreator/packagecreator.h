@@ -1,14 +1,14 @@
 #ifndef PACKAGECREATOR_H
 #define PACKAGECREATOR_H
 
+#include <QDebug>
 #include <QDialog>
-#include <QScopedPointer>
 #include <QDir>
 #include <QFile>
+#include <QProcess>
+#include <QScopedPointer>
 #include <QSettings>
 #include <QTextStream>
-#include <QDebug>
-#include <QProcess>
 
 namespace Ui
 {
@@ -20,7 +20,7 @@ class packageCreator : public QDialog
     Q_OBJECT
 
 signals:
-    void packageSuccess(const QFileInfo & info);
+    void packageSuccess(const QFileInfo &info);
 
 public:
     packageCreator();
@@ -32,8 +32,8 @@ protected:
     QDir workDir;
     virtual void parseConfig() = 0;
     virtual bool setWorkDir() = 0;
-    void handleConfigFile(const QString & source, const QString & dest);
-    void copy(const QString & source, const QString & dest);
+    void handleConfigFile(const QString &source, const QString &dest);
+    void copy(const QString &source, const QString &dest);
     virtual void package();
 
 private:
@@ -46,20 +46,21 @@ protected slots:
 class iconPackageCreator : public packageCreator
 {
 public:
-    iconPackageCreator(const QString & configFilePath);
+    iconPackageCreator(const QString &configFilePath);
     void parseConfig() override;
     bool setWorkDir() override;
+
 private:
     QString configFilePath;
 };
 
-
 class cursorPackageCreator : public packageCreator
 {
 public:
-    cursorPackageCreator(const QString & configFilePath);
+    cursorPackageCreator(const QString &configFilePath);
     void parseConfig() override;
     bool setWorkDir() override;
+
 private:
     QString configFilePath;
 };
@@ -67,9 +68,10 @@ private:
 class wallpaperCollectionPackageCreator : public packageCreator
 {
 public:
-    wallpaperCollectionPackageCreator(const QStringList & imagePath);
+    wallpaperCollectionPackageCreator(const QStringList &imagePath);
     void parseConfig() override;
     bool setWorkDir() override;
+
 private:
     QStringList imagePath;
 };
@@ -77,12 +79,13 @@ private:
 class soundPackageCreator : public packageCreator
 {
 public:
-    soundPackageCreator(const QString & configFilePath);
+    soundPackageCreator(const QString &configFilePath);
     void parseConfig() override;
     bool setWorkDir() override;
+
 private:
     QString configFilePath;
 };
 
 #endif // PACKAGECREATOR_H
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

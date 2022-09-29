@@ -15,16 +15,20 @@ class globalThemeCreator : public QDialog
     Q_OBJECT
 
 public:
-    globalThemeCreator(UKUIThemeModel * wallpaperCollectionModel,
-                       UKUIThemeModel * iconModel,
-                       UKUIThemeModel * cursorModel,
-                       UKUIThemeModel * soundModel,
-                       UKUIThemeModel * gtkStyleModel,
-                       UKUIThemeModel * qtStyleModel);
+    globalThemeCreator(UKUIThemeModel *wallpaperCollectionModel,
+                       UKUIThemeModel *iconModel,
+                       UKUIThemeModel *cursorModel,
+                       UKUIThemeModel *soundModel,
+                       UKUIThemeModel *gtkStyleModel,
+                       UKUIThemeModel *qtStyleModel);
     ~globalThemeCreator();
+    void onAccepted();
 private:
     QScopedPointer<Ui::globalThemeCreator> m_ui;
 };
 
 #endif // GLOBALTHEMECREATOR_H
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;
+
+
+

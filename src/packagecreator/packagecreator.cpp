@@ -1,10 +1,9 @@
 #include "packagecreator.h"
-#include "ui_packagecreator.h"
 #include "../settingmanager/settingmanager.h"
 #include "../ukuithemeelement/ukuithemeelement.h"
+#include "ui_packagecreator.h"
 
-packageCreator::packageCreator()
-    : m_ui(new Ui::packageCreator)
+packageCreator::packageCreator() : m_ui(new Ui::packageCreator)
 {
     m_ui->setupUi(this);
     connect(this, &packageCreator::accepted, this, &packageCreator::onAccepted);
@@ -12,12 +11,13 @@ packageCreator::packageCreator()
 
 packageCreator::~packageCreator() {}
 
-void packageCreator::handleConfigFile(const QString &source, const QString &dest)
+void packageCreator::handleConfigFile(const QString &source,
+                                      const QString &dest)
 {
-    QFile postInitSource(source),
-          postInitDest(dest);
+    QFile postInitSource(source), postInitDest(dest);
 
-    if (!postInitSource.open(QIODevice::ReadOnly) || !postInitDest.open(QIODevice::WriteOnly))
+    if (!postInitSource.open(QIODevice::ReadOnly) ||
+            !postInitDest.open(QIODevice::WriteOnly))
         return;
 
     while (!postInitSource.atEnd()) {
@@ -26,17 +26,11 @@ void packageCreator::handleConfigFile(const QString &source, const QString &dest
                            .replace("$MAINTAINER", maintainer)
                            .replace("$VERSION", version)
                            .replace("$DESCRIPTION", description)
-                           .toLocal8Bit()
-                          );
+                           .toLocal8Bit());
     }
-    postInitDest.setPermissions(
-        QFileDevice::ReadOwner |
-        QFileDevice::ExeOwner |
-        QFileDevice::ReadGroup |
-        QFileDevice::ExeGroup |
-        QFileDevice::ReadOther |
-        QFileDevice::ExeOther
-    );
+    postInitDest.setPermissions(QFileDevice::ReadOwner | QFileDevice::ExeOwner |
+                                QFileDevice::ReadGroup | QFileDevice::ExeGroup |
+                                QFileDevice::ReadOther | QFileDevice::ExeOther);
     postInitSource.close();
     postInitDest.close();
 }
@@ -67,8 +61,10 @@ void packageCreator::copy(const QString &source, const QString &dest)
         QDir sourceDir(source), destDir(dest);
         QDir().mkpath(dest);
         auto sourceEntryList = sourceDir.entryInfoList();
-        for (auto i = std::begin(sourceEntryList); i != std::end(sourceEntryList); ++i) {
-            if (i->fileName() == "." || i->fileName() == "..") continue;
+        for (auto i = std::begin(sourceEntryList); i != std::end(sourceEntryList);
+                ++i) {
+            if (i->fileName() == "." || i->fileName() == "..")
+                continue;
             copy(i->filePath(), destDir.filePath(i->fileName()));
         }
     } else {
@@ -81,11 +77,15 @@ void packageCreator::package()
     packageProcess.setWorkingDirectory(workDir.filePath(".."));
     packageProcess.start("dpkg-deb", QStringList() << "-b" << name);
     logger::getStandardLogger().log("正在执行dpkg-deb");
-    connect(&packageProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-    [ = ](int exitCode Q_DECL_UNUSED, QProcess::ExitStatus exitStatus Q_DECL_UNUSED) {
+    connect(
+        &packageProcess,
+        QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+        [ = ](int exitCode Q_DECL_UNUSED,
+    QProcess::ExitStatus exitStatus Q_DECL_UNUSED) {
         if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
             logger::getStandardLogger().log("打包成功");
-            emit packageSuccess(QFileInfo(QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
+            emit packageSuccess(QFileInfo(
+                                    QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
             workDir.removeRecursively();
         } else {
             logger::getStandardLogger().log("打包出现错误");
@@ -134,7 +134,8 @@ void iconPackageCreator::parseConfig()
     workDir.mkdir("DEBIAN");
     QDir controlPath(workDir.filePath("DEBIAN"));
 
-    handleConfigFile(":/templates/icon/postinst", controlPath.filePath("postinst"));
+    handleConfigFile(":/templates/icon/postinst",
+                     controlPath.filePath("postinst"));
     handleConfigFile(":/templates/icon/postrm", controlPath.filePath("postrm"));
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
@@ -170,16 +171,20 @@ void cursorPackageCreator::parseConfig()
     workDir.mkdir("DEBIAN");
     QDir controlPath(workDir.filePath("DEBIAN"));
 
-    handleConfigFile(":/templates/cursor/postinst", controlPath.filePath("postinst"));
+    handleConfigFile(":/templates/cursor/postinst",
+                     controlPath.filePath("postinst"));
     handleConfigFile(":/templates/cursor/prerm", controlPath.filePath("postrm"));
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
 
-wallpaperCollectionPackageCreator::wallpaperCollectionPackageCreator(const QStringList& imagePath) : imagePath(imagePath){}
+wallpaperCollectionPackageCreator::wallpaperCollectionPackageCreator(
+    const QStringList &imagePath)
+    : imagePath(imagePath) {}
 
 bool wallpaperCollectionPackageCreator::setWorkDir()
 {
-    auto wallpaperCollectionDir = settingManager::getSettings().wallpaperCollectionDir();
+    auto wallpaperCollectionDir =
+        settingManager::getSettings().wallpaperCollectionDir();
     if (wallpaperCollectionDir.exists(name + ".deb"))
         return false;
     if (wallpaperCollectionDir.exists(name)) {
@@ -195,7 +200,8 @@ void wallpaperCollectionPackageCreator::parseConfig()
     workDir.mkpath("usr/share/backgrounds/");
 
     for (auto picture : imagePath) {
-        QFile::copy(picture, workDir.filePath("usr/share/backgrounds/" + QFileInfo(picture).fileName()));
+        QFile::copy(picture, workDir.filePath("usr/share/backgrounds/" +
+                                              QFileInfo(picture).fileName()));
     }
 
     workDir.mkdir("DEBIAN");
@@ -203,7 +209,6 @@ void wallpaperCollectionPackageCreator::parseConfig()
 
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
-
 
 soundPackageCreator::soundPackageCreator(const QString &configFilePath)
     : configFilePath(configFilePath) {}
@@ -249,4 +254,4 @@ void soundPackageCreator::parseConfig()
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
 }
 
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

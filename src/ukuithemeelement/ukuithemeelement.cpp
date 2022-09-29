@@ -1,6 +1,6 @@
 #include "ukuithemeelement.h"
 
-UKUIThemeModel::UKUIThemeModel(const QDir & dir): workDir(dir)
+UKUIThemeModel::UKUIThemeModel(const QDir &dir) : workDir(dir)
 {
     workDir.setNameFilters(QStringList() << "*.deb");
     for (auto i : workDir.entryInfoList()) {
@@ -10,7 +10,8 @@ UKUIThemeModel::UKUIThemeModel(const QDir & dir): workDir(dir)
 
 QVariant UKUIThemeModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()) return QVariant();
+    if (!index.isValid())
+        return QVariant();
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case 0:
@@ -37,10 +38,11 @@ int UKUIThemeModel::rowCount(const QModelIndex &parent) const
 void UKUIThemeModel::addItem(const QString &name, const QString &path)
 {
     ThemeData.append({name, path});
-    emit dataChanged(QAbstractTableModel::createIndex(ThemeData.size() - 1, 0), QAbstractTableModel::createIndex(ThemeData.size() - 1, 1));
+    emit dataChanged(QAbstractTableModel::createIndex(ThemeData.size() - 1, 0),
+                     QAbstractTableModel::createIndex(ThemeData.size() - 1, 1));
 }
 
-void UKUIThemeModel::deleteItem(const QModelIndexList & list)
+void UKUIThemeModel::deleteItem(const QModelIndexList &list)
 {
     for (auto i : list) {
         QFile::remove(ThemeData[i.row()].second);
@@ -48,5 +50,4 @@ void UKUIThemeModel::deleteItem(const QModelIndexList & list)
     }
 }
 
-
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

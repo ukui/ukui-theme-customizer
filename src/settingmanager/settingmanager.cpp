@@ -25,9 +25,10 @@ settingManager &settingManager::getSettings()
 
 settingManager::settingManager()
 {
-    QPointer <QSettings> settingsFromFile;
+    QPointer<QSettings> settingsFromFile;
     if (QFile::exists("/etc/ukui-theme-customizer/config.ini")) {
-        settingsFromFile = new QSettings("/etc/ukui-theme-customizer/config.ini", QSettings::IniFormat);
+        settingsFromFile = new QSettings("/etc/ukui-theme-customizer/config.ini",
+                                         QSettings::IniFormat);
     } else {
         settingsFromFile = new QSettings("config.ini", QSettings::IniFormat);
     }
@@ -41,12 +42,14 @@ settingManager::settingManager()
     settings.totalWorkDir.setPath(filePath);
 
     for (auto subDir : {
-                "icons", "cursors", "globalThemes", "wallpaperCollections", "gtkStyles", "qtStyles", "sounds"
+                "icons", "cursors", "globalThemes", "wallpaperCollections", "gtkStyles",
+                "qtStyles", "sounds"
             }) {
         if (!QFileInfo(settings.totalWorkDir.filePath(subDir)).isDir()) {
             QFile::remove(settings.totalWorkDir.filePath(subDir));
         }
-        if (!settings.totalWorkDir.exists(subDir)) settings.totalWorkDir.mkdir(subDir);
+        if (!settings.totalWorkDir.exists(subDir))
+            settings.totalWorkDir.mkdir(subDir);
     }
 }
 
@@ -54,7 +57,6 @@ QDir settingManager::iconDir()
 {
     return QDir(totalWorkDir.filePath("icons"));
 }
-
 
 QDir settingManager::cursorDir()
 {
@@ -86,4 +88,4 @@ QDir settingManager::soundDir()
     return QDir(totalWorkDir.filePath("sounds"));
 }
 
-// kate: indent-mode cstyle; indent-width 1; replace-tabs on; ;
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

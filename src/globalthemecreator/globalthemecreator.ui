@@ -29,84 +29,19 @@
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Qt风格2</string>
-         </property>
-        </widget>
+       <item row="7" column="1" colspan="2">
+        <widget class="QComboBox" name="qtStyle1"/>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>壁纸</string>
-         </property>
-        </widget>
+       <item row="2" column="1" colspan="2">
+        <widget class="QComboBox" name="cursorName"/>
        </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="wallpaperCollection"/>
+       <item row="1" column="1" colspan="2">
+        <widget class="QComboBox" name="iconName"/>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>GTK风格</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QComboBox" name="qtStyle2">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
+       <item row="4" column="1" colspan="2">
         <widget class="QComboBox" name="gtkStyle1">
          <property name="frame">
           <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="themeName">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>GTK风格2</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QComboBox" name="qtStyle1"/>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>声音</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="iconName"/>
-       </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="soundName"/>
-       </item>
-       <item row="6" column="1">
-        <widget class="QComboBox" name="gtkStyle2">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="editable">
-          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -117,35 +52,91 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>1</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>主题名</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
           <string>光标</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="1" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>图标</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QComboBox" name="cursorName"/>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>声音</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="2">
+        <widget class="QComboBox" name="wallpaperCollection"/>
+       </item>
+       <item row="8" column="2">
+        <widget class="QCheckBox" name="qt2Enabled">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>壁纸</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="2">
+        <widget class="QCheckBox" name="gtk2Enabled">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QComboBox" name="qtStyle2">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="2">
+        <widget class="QComboBox" name="soundName"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>GTK风格2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QComboBox" name="gtkStyle2">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="editable">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>GTK风格</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Qt风格2</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
