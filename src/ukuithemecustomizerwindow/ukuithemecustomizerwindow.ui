@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UKUIThemeCustomizer</class>
+ <widget class="QMainWindow" name="UKUIThemeCustomizer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>832</width>
+    <height>599</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>UKUIThemeCustomizer</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="1" column="0">
+     <widget class="QLabel" name="logbox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>27</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>6</number>
+      </property>
+      <widget class="QWidget" name="globalTheme">
+       <attribute name="title">
+        <string>全局主题</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="2">
+         <widget class="QToolButton" name="globalThemeAdd">
+          <property name="text">
+           <string>添加</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="4">
+         <widget class="QListView" name="globalThemeView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+          <property name="viewMode">
+           <enum>QListView::ListMode</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QToolButton" name="globalThemeDel">
+          <property name="text">
+           <string>删除</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QToolButton" name="globalThemeAddExisting">
+          <property name="text">
+           <string>添加现有文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="wallpaperCollection">
+       <attribute name="title">
+        <string>壁纸集</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="3">
+         <widget class="QToolButton" name="wallpaperCollectionDel">
+          <property name="text">
+           <string>删除</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="4">
+         <widget class="QListView" name="wallpaperCollectionView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QToolButton" name="wallpaperCollectionAdd">
+          <property name="text">
+           <string>添加</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QToolButton" name="wallpaperCollectionAddExisting">
+          <property name="text">
+           <string>添加现有文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="icon">
+       <attribute name="title">
+        <string>图标</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0" colspan="4">
+         <widget class="QListView" name="iconView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QToolButton" name="iconDel">
+          <property name="text">
+           <string>删除</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QToolButton" name="iconAdd">
+          <property name="text">
+           <string>添加</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QToolButton" name="iconAddExisting">
+          <property name="text">
+           <string>添加现有文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="cursor">
+       <attribute name="title">
+        <string>光标</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="1" column="2">
+         <widget class="QToolButton" name="cursorAdd">
+          <property name="text">
+           <string>添加</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="4">
+         <widget class="QListView" name="cursorView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QToolButton" name="cursorDel">
+          <property name="text">
+           <string>删除</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QToolButton" name="cursorAddExisting">
+          <property name="text">
+           <string>添加现有文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="sound">
+       <attribute name="title">
+        <string>声音</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <item row="0" column="1" colspan="4">
+         <widget class="QListView" name="soundView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="4">
+         <widget class="QToolButton" name="soundDel">
+          <property name="text">
+           <string>删除</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QToolButton" name="soundAdd">
+          <property name="text">
+           <string>添加</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QToolButton" name="soundAddExisting">
+          <property name="text">
+           <string>添加现有文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="gtkStyle">
+       <attribute name="title">
+        <string>GTK风格</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0" colspan="4">
+         <widget class="QListView" name="gtkStyleView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QToolButton" name="gtkStyleAdd">
+          <property name="text">
+           <string>添加</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QToolButton" name="gtkStyleDel">
+          <property name="text">
+           <string>删除</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QToolButton" name="gtkStyleAddExisting">
+          <property name="text">
+           <string>添加现有文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="qtStyle">
+       <attribute name="title">
+        <string>Qt风格</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_8">
+        <item row="1" column="3">
+         <widget class="QToolButton" name="qtStyleDel">
+          <property name="text">
+           <string>删除</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="4">
+         <widget class="QListView" name="qtStyleView">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QToolButton" name="qtStyleAdd">
+          <property name="text">
+           <string>添加</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QToolButton" name="qtStyleAddExisting">
+          <property name="text">
+           <string>添加现有文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

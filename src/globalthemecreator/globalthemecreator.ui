@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>globalThemeCreator</class>
+ <widget class="QDialog" name="globalThemeCreator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>253</width>
+    <height>582</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>globalThemeCreator</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>237</width>
+        <height>524</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="7" column="1" colspan="2">
+        <widget class="QComboBox" name="qtStyle1"/>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="QComboBox" name="cursorName"/>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QComboBox" name="iconName"/>
+       </item>
+       <item row="4" column="1" colspan="2">
+        <widget class="QComboBox" name="gtkStyle1">
+         <property name="frame">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Qt风格</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>光标</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>图标</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>声音</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="2">
+        <widget class="QComboBox" name="wallpaperCollection"/>
+       </item>
+       <item row="8" column="2">
+        <widget class="QCheckBox" name="qt2Enabled">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>壁纸</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="2">
+        <widget class="QCheckBox" name="gtk2Enabled">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QComboBox" name="qtStyle2">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="2">
+        <widget class="QComboBox" name="soundName"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>GTK风格2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QComboBox" name="gtkStyle2">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="editable">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>GTK风格</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Qt风格2</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>globalThemeCreator</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>globalThemeCreator</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
