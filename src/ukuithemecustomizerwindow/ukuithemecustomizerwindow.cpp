@@ -24,7 +24,7 @@ UKUIThemeCustomizer::UKUIThemeCustomizer(QWidget *parent)
             &UKUIThemeCustomizer::onGlobalThemeAddPressed);
     connect(m_ui->globalThemeDel, &QPushButton::pressed, this,
             &UKUIThemeCustomizer::onGlobalThemeDeletePressed);
-    connect(m_ui->iconAddExisting, &QPushButton::pressed, this,
+    connect(m_ui->globalThemeAddExisting, &QPushButton::pressed, this,
             &UKUIThemeCustomizer::onGlobalThemeAddExistingPressed);
 
     m_ui->iconView->setModel(&iconModel);
@@ -383,10 +383,23 @@ void UKUIThemeCustomizer::onGlobalThemeAddExistingPressed()
 
 void UKUIThemeCustomizer::onGlobalThemeAddPressed()
 {
-    globalThemeCreator creator(&wallpaperCollectionModel, &iconModel,
-                               &cursorModel, &soundModel, &gtkStyleModel,
-                               &qtStyleModel);
-    creator.exec();
+    globalThemeCreator globalCreator(&wallpaperCollectionModel, &iconModel,
+                                     &cursorModel, &soundModel, &gtkStyleModel,
+                                     &qtStyleModel);
+    globalCreator.exec();
+    auto depends = globalCreator.getDepends();
+    if (!globalCreator.isReadyToPackage()) return;
+
+    if (!creatorMutex.try_lock()) {
+        logger::getStandardLogger().log("请等待当前任务完成");
+        return;
+    }
+    creator = new globalThemePackageCreator(depends);
+    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
+        globalThemeModel.addItem(info.baseName(), info.absolutePath());
+        creatorMutex.unlock();
+    });
+    creator->exec();
 }
 
 void UKUIThemeCustomizer::onGlobalThemeDeletePressed()

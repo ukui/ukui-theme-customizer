@@ -87,5 +87,16 @@ private:
     QString configFilePath;
 };
 
+class globalThemePackageCreator : public packageCreator
+{
+public:
+    globalThemePackageCreator(const QStringList &depends);
+    void parseConfig() override;
+    bool setWorkDir() override;
+
+private:
+    QStringList depends;
+};
+
 #endif // PACKAGECREATOR_H
 // kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

@@ -102,7 +102,7 @@ bool iconPackageCreator::setWorkDir()
     if (iconDir.exists(name + ".deb"))
         return false;
     if (iconDir.exists(name)) {
-        iconDir.remove(name);
+        QDir(iconDir.filePath(name)).removeRecursively();
     }
     iconDir.mkdir(name);
     workDir.setPath(iconDir.filePath(name));
@@ -149,7 +149,7 @@ bool cursorPackageCreator::setWorkDir()
     if (cursorDir.exists(name + ".deb"))
         return false;
     if (cursorDir.exists(name)) {
-        cursorDir.remove(name);
+        QDir(cursorDir.filePath(name)).removeRecursively();
     }
     cursorDir.mkdir(name);
     workDir.setPath(cursorDir.filePath(name));
@@ -188,7 +188,7 @@ bool wallpaperCollectionPackageCreator::setWorkDir()
     if (wallpaperCollectionDir.exists(name + ".deb"))
         return false;
     if (wallpaperCollectionDir.exists(name)) {
-        wallpaperCollectionDir.remove(name);
+        QDir(wallpaperCollectionDir.filePath(name)).removeRecursively();
     }
     wallpaperCollectionDir.mkdir(name);
     workDir.setPath(wallpaperCollectionDir.filePath(name));
@@ -219,7 +219,7 @@ bool soundPackageCreator::setWorkDir()
     if (soundDir.exists(name + ".deb"))
         return false;
     if (soundDir.exists(name)) {
-        soundDir.remove(name);
+        QDir(soundDir.filePath(name)).removeRecursively();
     }
     soundDir.mkdir(name);
     workDir.setPath(soundDir.filePath(name));
@@ -252,6 +252,47 @@ void soundPackageCreator::parseConfig()
     QDir controlPath(workDir.filePath("DEBIAN"));
 
     handleConfigFile(":/templates/control", controlPath.filePath("control"));
+}
+
+
+globalThemePackageCreator::globalThemePackageCreator::globalThemePackageCreator(const QStringList &depends)
+    : depends(depends) {}
+
+bool globalThemePackageCreator::setWorkDir()
+{
+    auto globalThemeDir =
+        settingManager::getSettings().globalThemeDir();
+    if (globalThemeDir.exists(name + ".deb"))
+        return false;
+    if (globalThemeDir.exists(name)) {
+        QDir(globalThemeDir.filePath(name)).removeRecursively();
+    }
+    globalThemeDir.mkdir(name);
+    workDir.setPath(globalThemeDir.filePath(name));
+    return true;
+}
+
+void globalThemePackageCreator::parseConfig()
+{
+    workDir.mkdir("DEBIAN");
+    QDir controlPath(workDir.filePath("DEBIAN"));
+
+    handleConfigFile(":/templates/control", controlPath.filePath("control"));
+    QFile controlFile(controlPath.filePath("control"));
+    auto rawPermission = controlFile.permissions();
+    controlFile.setPermissions(rawPermission | QFileDevice::Permission::WriteOwner);
+    controlFile.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream controlOut(&controlFile);
+
+    controlOut << "Depends: ";
+    for (auto dependPackage = std::begin(depends); dependPackage != std::end(depends); ++dependPackage) {
+        controlOut << *dependPackage;
+        if (dependPackage + 1 != std::end(depends)) controlOut << ", ";
+    }
+
+    controlOut << "\n";
+    controlFile.setPermissions(rawPermission);
+    controlFile.close();
 }
 
 // kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

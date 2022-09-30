@@ -23,8 +23,12 @@ public:
                        UKUIThemeModel *qtStyleModel);
     ~globalThemeCreator();
     void onAccepted();
+    QStringList getDepends();
+    bool isReadyToPackage();
 private:
     QScopedPointer<Ui::globalThemeCreator> m_ui;
+    QStringList depends;
+    bool readyToPackage;
 };
 
 #endif // GLOBALTHEMECREATOR_H

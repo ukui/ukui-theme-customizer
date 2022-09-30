@@ -23,13 +23,14 @@ globalThemeCreator::globalThemeCreator(UKUIThemeModel *wallpaperCollectionModel,
     connect(this, &globalThemeCreator::accepted, this, &globalThemeCreator::onAccepted);
     connect(m_ui->gtk2Enabled, &QCheckBox::stateChanged, m_ui->gtkStyle2, &QComboBox::setEnabled);
     connect(m_ui->qt2Enabled, &QCheckBox::stateChanged, m_ui->qtStyle2, &QComboBox::setEnabled);
+
+    readyToPackage = false;
 }
 
 globalThemeCreator::~globalThemeCreator() noexcept {}
 
 void globalThemeCreator::onAccepted()
 {
-    QStringList depends;
     if (m_ui->wallpaperCollection->currentIndex() == -1) {
         logger::getStandardLogger().log("wallpaper未设置");
         return;
@@ -91,4 +92,15 @@ void globalThemeCreator::onAccepted()
         depends << qtName2;
     }
     depends << qtName;
+    readyToPackage = true;
+}
+
+QStringList globalThemeCreator::getDepends()
+{
+    return depends;
+}
+
+bool globalThemeCreator::isReadyToPackage()
+{
+    return readyToPackage;
 }
