@@ -6,6 +6,7 @@
 #include <QAbstractTableModel>
 #include <QDir>
 #include <QObject>
+#include <QDebug>
 
 class UKUIThemeModel : public QAbstractTableModel
 {

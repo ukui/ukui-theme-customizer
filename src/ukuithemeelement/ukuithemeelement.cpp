@@ -4,7 +4,7 @@ UKUIThemeModel::UKUIThemeModel(const QDir &dir) : workDir(dir)
 {
     workDir.setNameFilters(QStringList() << "*.deb");
     for (auto i : workDir.entryInfoList()) {
-        addItem(i.baseName(), i.filePath());
+        addItem(i.baseName(), i.absoluteFilePath());
     }
 }
 
@@ -45,6 +45,7 @@ void UKUIThemeModel::addItem(const QString &name, const QString &path)
 void UKUIThemeModel::deleteItem(const QModelIndexList &list)
 {
     for (auto i : list) {
+        qDebug() << i.row() << " " << ThemeData[i.row()].second;
         QFile::remove(ThemeData[i.row()].second);
         ThemeData.remove(i.row());
     }

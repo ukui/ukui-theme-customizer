@@ -19,18 +19,29 @@ class packageCreator : public QDialog
 {
     Q_OBJECT
 
+
+
 signals:
-    void packageSuccess(const QFileInfo &info);
+    void packageDone();
 
 public:
+
+    enum class packageState {
+        Success,
+        Failed,
+        NotStart
+    };
+
     packageCreator();
     ~packageCreator();
+    packageState getState();
+    QFileInfo &getFileInfo();
 
 protected:
     QProcess packageProcess;
     QString name, maintainer, version, description;
     QDir workDir;
-    virtual void parseConfig() = 0;
+    virtual bool parseConfig() = 0;
     virtual bool setWorkDir() = 0;
     void handleConfigFile(const QString &source, const QString &dest);
     void copy(const QString &source, const QString &dest);
@@ -38,16 +49,19 @@ protected:
 
 private:
     QScopedPointer<Ui::packageCreator> m_ui;
+    packageState state;
+    QFileInfo info;
 
 protected slots:
     void onAccepted();
+    void onCanceled();
 };
 
 class iconPackageCreator : public packageCreator
 {
 public:
     iconPackageCreator(const QString &configFilePath);
-    void parseConfig() override;
+    bool parseConfig() override;
     bool setWorkDir() override;
 
 private:
@@ -58,7 +72,7 @@ class cursorPackageCreator : public packageCreator
 {
 public:
     cursorPackageCreator(const QString &configFilePath);
-    void parseConfig() override;
+    bool parseConfig() override;
     bool setWorkDir() override;
 
 private:
@@ -69,7 +83,7 @@ class wallpaperCollectionPackageCreator : public packageCreator
 {
 public:
     wallpaperCollectionPackageCreator(const QStringList &imagePath);
-    void parseConfig() override;
+    bool parseConfig() override;
     bool setWorkDir() override;
 
 private:
@@ -80,7 +94,7 @@ class soundPackageCreator : public packageCreator
 {
 public:
     soundPackageCreator(const QString &configFilePath);
-    void parseConfig() override;
+    bool parseConfig() override;
     bool setWorkDir() override;
 
 private:
@@ -91,7 +105,7 @@ class globalThemePackageCreator : public packageCreator
 {
 public:
     globalThemePackageCreator(const QStringList &depends);
-    void parseConfig() override;
+    bool parseConfig() override;
     bool setWorkDir() override;
 
 private:

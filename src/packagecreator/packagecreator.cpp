@@ -3,10 +3,11 @@
 #include "../ukuithemeelement/ukuithemeelement.h"
 #include "ui_packagecreator.h"
 
-packageCreator::packageCreator() : m_ui(new Ui::packageCreator)
+packageCreator::packageCreator() : m_ui(new Ui::packageCreator), state(packageState::NotStart)
 {
     m_ui->setupUi(this);
     connect(this, &packageCreator::accepted, this, &packageCreator::onAccepted);
+    connect(this, &packageCreator::rejected, this, &packageCreator::onCanceled);
 }
 
 packageCreator::~packageCreator() {}
@@ -38,17 +39,53 @@ void packageCreator::handleConfigFile(const QString &source,
 void packageCreator::onAccepted()
 {
     name = m_ui->name->text();
+    if (name == "") {
+        logger::getStandardLogger().log("名称不能为空");
+        emit packageDone();
+        return;
+    }
     version = m_ui->version->text();
+    if (version == "") {
+        logger::getStandardLogger().log("版本号不能为空");
+        emit packageDone();
+        return;
+    }
     maintainer = m_ui->maintainer->text();
+    if (maintainer == "") {
+        logger::getStandardLogger().log("维护者不能为空");
+        emit packageDone();
+        return;
+    }
     description = m_ui->description->toPlainText();
+    if (description == "") {
+        logger::getStandardLogger().log("描述不能为空");
+        emit packageDone();
+        return;
+    }
     if (!setWorkDir()) {
         logger::getStandardLogger().log("已存在同名包");
+        emit packageDone();
         return;
     }
     workDir.mkdir("DEBIAN");
-    parseConfig();
+    if (!parseConfig()) {
+        emit packageDone();
+        return;
+    }
     package();
+    emit packageDone();
 }
+
+void packageCreator::onCanceled()
+{
+    emit packageDone();
+}
+
+packageCreator::packageState packageCreator::getState()
+{
+    return state;
+}
+
 
 void packageCreator::copy(const QString &source, const QString &dest)
 {
@@ -65,7 +102,7 @@ void packageCreator::copy(const QString &source, const QString &dest)
                 ++i) {
             if (i->fileName() == "." || i->fileName() == "..")
                 continue;
-            copy(i->filePath(), destDir.filePath(i->fileName()));
+            copy(i->absoluteFilePath(), destDir.absoluteFilePath(i->fileName()));
         }
     } else {
         QFile::copy(source, dest);
@@ -74,7 +111,7 @@ void packageCreator::copy(const QString &source, const QString &dest)
 
 void packageCreator::package()
 {
-    packageProcess.setWorkingDirectory(workDir.filePath(".."));
+    packageProcess.setWorkingDirectory(workDir.absoluteFilePath(".."));
     packageProcess.start("dpkg-deb", QStringList() << "-b" << name);
     logger::getStandardLogger().log("正在执行dpkg-deb");
     connect(
@@ -82,16 +119,24 @@ void packageCreator::package()
         QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
         [ = ](int exitCode Q_DECL_UNUSED,
     QProcess::ExitStatus exitStatus Q_DECL_UNUSED) {
-        if (QDir(workDir.filePath("..")).exists(name + ".deb")) {
+        if (QDir(workDir.absoluteFilePath("..")).exists(name + ".deb")) {
             logger::getStandardLogger().log("打包成功");
-            emit packageSuccess(QFileInfo(
-                                    QDir(workDir.filePath("..")).absoluteFilePath(name + ".deb")));
             workDir.removeRecursively();
+            state = packageState::Success;
+            info = QFileInfo(workDir.absoluteFilePath("../" + name + ".deb"));
         } else {
-            logger::getStandardLogger().log("打包出现错误");
+            state = packageState::Failed;
+            logger::getStandardLogger().log("错误：" + QString(packageProcess.readAllStandardError()));
         }
+        emit packageDone();
     });
 }
+
+QFileInfo &packageCreator::getFileInfo()
+{
+    return info;
+}
+
 
 iconPackageCreator::iconPackageCreator(const QString &configFilePath)
     : configFilePath(configFilePath) {}
@@ -102,24 +147,24 @@ bool iconPackageCreator::setWorkDir()
     if (iconDir.exists(name + ".deb"))
         return false;
     if (iconDir.exists(name)) {
-        QDir(iconDir.filePath(name)).removeRecursively();
+        QDir(iconDir.absoluteFilePath(name)).removeRecursively();
     }
     iconDir.mkdir(name);
-    workDir.setPath(iconDir.filePath(name));
+    workDir.setPath(iconDir.absoluteFilePath(name));
     return true;
 }
 
-void iconPackageCreator::parseConfig()
+bool iconPackageCreator::parseConfig()
 {
     workDir.mkpath("usr/share/icons/" + name);
-    QDir iconDir(workDir.filePath("usr/share/icons/" + name));
-    copy(configFilePath, iconDir.filePath("index.theme"));
+    QDir iconDir(workDir.absoluteFilePath("usr/share/icons/" + name));
+    copy(configFilePath, iconDir.absoluteFilePath("index.theme"));
 
     QSettings iconConfig(configFilePath, QSettings::Format::IniFormat);
     iconConfig.beginGroup("Icon Theme");
     if (!iconConfig.contains("Name") || !iconConfig.contains("Directories")) {
         logger::getStandardLogger().log("不合法的icon文件");
-        return;
+        return false;
     }
 
     QFileInfo info(configFilePath);
@@ -128,16 +173,17 @@ void iconPackageCreator::parseConfig()
     auto dirList = iconConfig.value("Directories").toStringList();
     for (auto dir = std::begin(dirList); dir != std::end(dirList); ++dir) {
         if (*dir != "" && baseDir.exists(*dir)) {
-            copy(baseDir.filePath(*dir), iconDir.filePath(*dir));
+            copy(baseDir.absoluteFilePath(*dir), iconDir.absoluteFilePath(*dir));
         }
     }
     workDir.mkdir("DEBIAN");
-    QDir controlPath(workDir.filePath("DEBIAN"));
+    QDir controlPath(workDir.absoluteFilePath("DEBIAN"));
 
     handleConfigFile(":/templates/icon/postinst",
-                     controlPath.filePath("postinst"));
-    handleConfigFile(":/templates/icon/postrm", controlPath.filePath("postrm"));
-    handleConfigFile(":/templates/control", controlPath.filePath("control"));
+                     controlPath.absoluteFilePath("postinst"));
+    handleConfigFile(":/templates/icon/postrm", controlPath.absoluteFilePath("postrm"));
+    handleConfigFile(":/templates/control", controlPath.absoluteFilePath("control"));
+    return true;
 }
 
 cursorPackageCreator::cursorPackageCreator(const QString &configFilePath)
@@ -149,32 +195,33 @@ bool cursorPackageCreator::setWorkDir()
     if (cursorDir.exists(name + ".deb"))
         return false;
     if (cursorDir.exists(name)) {
-        QDir(cursorDir.filePath(name)).removeRecursively();
+        QDir(cursorDir.absoluteFilePath(name)).removeRecursively();
     }
     cursorDir.mkdir(name);
-    workDir.setPath(cursorDir.filePath(name));
+    workDir.setPath(cursorDir.absoluteFilePath(name));
     return true;
 }
 
-void cursorPackageCreator::parseConfig()
+bool cursorPackageCreator::parseConfig()
 {
     workDir.mkpath("usr/share/icons/" + name);
-    QDir cursorDir(workDir.filePath("usr/share/icons/" + name));
-    copy(configFilePath, cursorDir.filePath("cursor.theme"));
+    QDir cursorDir(workDir.absoluteFilePath("usr/share/icons/" + name));
+    copy(configFilePath, cursorDir.absoluteFilePath("cursor.theme"));
     cursorDir.mkpath("../default");
 
     QFileInfo info(configFilePath);
     auto baseDir = info.dir();
 
-    copy(baseDir.filePath("cursors"), cursorDir.filePath("cursors"));
+    copy(baseDir.absoluteFilePath("cursors"), cursorDir.absoluteFilePath("cursors"));
 
     workDir.mkdir("DEBIAN");
-    QDir controlPath(workDir.filePath("DEBIAN"));
+    QDir controlPath(workDir.absoluteFilePath("DEBIAN"));
 
     handleConfigFile(":/templates/cursor/postinst",
-                     controlPath.filePath("postinst"));
-    handleConfigFile(":/templates/cursor/prerm", controlPath.filePath("postrm"));
-    handleConfigFile(":/templates/control", controlPath.filePath("control"));
+                     controlPath.absoluteFilePath("postinst"));
+    handleConfigFile(":/templates/cursor/prerm", controlPath.absoluteFilePath("postrm"));
+    handleConfigFile(":/templates/control", controlPath.absoluteFilePath("control"));
+    return true;
 }
 
 wallpaperCollectionPackageCreator::wallpaperCollectionPackageCreator(
@@ -188,26 +235,27 @@ bool wallpaperCollectionPackageCreator::setWorkDir()
     if (wallpaperCollectionDir.exists(name + ".deb"))
         return false;
     if (wallpaperCollectionDir.exists(name)) {
-        QDir(wallpaperCollectionDir.filePath(name)).removeRecursively();
+        QDir(wallpaperCollectionDir.absoluteFilePath(name)).removeRecursively();
     }
     wallpaperCollectionDir.mkdir(name);
-    workDir.setPath(wallpaperCollectionDir.filePath(name));
+    workDir.setPath(wallpaperCollectionDir.absoluteFilePath(name));
     return true;
 }
 
-void wallpaperCollectionPackageCreator::parseConfig()
+bool wallpaperCollectionPackageCreator::parseConfig()
 {
     workDir.mkpath("usr/share/backgrounds/");
 
     for (auto picture : imagePath) {
-        QFile::copy(picture, workDir.filePath("usr/share/backgrounds/" +
-                                              QFileInfo(picture).fileName()));
+        QFile::copy(picture, workDir.absoluteFilePath("usr/share/backgrounds/" +
+                    QFileInfo(picture).fileName()));
     }
 
     workDir.mkdir("DEBIAN");
-    QDir controlPath(workDir.filePath("DEBIAN"));
+    QDir controlPath(workDir.absoluteFilePath("DEBIAN"));
 
-    handleConfigFile(":/templates/control", controlPath.filePath("control"));
+    handleConfigFile(":/templates/control", controlPath.absoluteFilePath("control"));
+    return true;
 }
 
 soundPackageCreator::soundPackageCreator(const QString &configFilePath)
@@ -219,24 +267,24 @@ bool soundPackageCreator::setWorkDir()
     if (soundDir.exists(name + ".deb"))
         return false;
     if (soundDir.exists(name)) {
-        QDir(soundDir.filePath(name)).removeRecursively();
+        QDir(soundDir.absoluteFilePath(name)).removeRecursively();
     }
     soundDir.mkdir(name);
-    workDir.setPath(soundDir.filePath(name));
+    workDir.setPath(soundDir.absoluteFilePath(name));
     return true;
 }
 
-void soundPackageCreator::parseConfig()
+bool soundPackageCreator::parseConfig()
 {
     workDir.mkpath("usr/share/sounds/" + name);
-    QDir soundDir(workDir.filePath("usr/share/sounds/" + name));
-    copy(configFilePath, soundDir.filePath("index.theme"));
+    QDir soundDir(workDir.absoluteFilePath("usr/share/sounds/" + name));
+    copy(configFilePath, soundDir.absoluteFilePath("index.theme"));
 
     QSettings soundConfig(configFilePath, QSettings::Format::IniFormat);
     soundConfig.beginGroup("Sound Theme");
     if (!soundConfig.contains("Name") || !soundConfig.contains("Directories")) {
         logger::getStandardLogger().log("不合法的sound文件");
-        return;
+        return false;
     }
 
     QFileInfo info(configFilePath);
@@ -245,13 +293,14 @@ void soundPackageCreator::parseConfig()
     auto dirList = soundConfig.value("Directories").toStringList();
     for (auto dir = std::begin(dirList); dir != std::end(dirList); ++dir) {
         if (*dir != "" && baseDir.exists(*dir)) {
-            copy(baseDir.filePath(*dir), soundDir.filePath(*dir));
+            copy(baseDir.absoluteFilePath(*dir), soundDir.absoluteFilePath(*dir));
         }
     }
     workDir.mkdir("DEBIAN");
-    QDir controlPath(workDir.filePath("DEBIAN"));
+    QDir controlPath(workDir.absoluteFilePath("DEBIAN"));
 
-    handleConfigFile(":/templates/control", controlPath.filePath("control"));
+    handleConfigFile(":/templates/control", controlPath.absoluteFilePath("control"));
+    return true;
 }
 
 
@@ -265,20 +314,20 @@ bool globalThemePackageCreator::setWorkDir()
     if (globalThemeDir.exists(name + ".deb"))
         return false;
     if (globalThemeDir.exists(name)) {
-        QDir(globalThemeDir.filePath(name)).removeRecursively();
+        QDir(globalThemeDir.absoluteFilePath(name)).removeRecursively();
     }
     globalThemeDir.mkdir(name);
-    workDir.setPath(globalThemeDir.filePath(name));
+    workDir.setPath(globalThemeDir.absoluteFilePath(name));
     return true;
 }
 
-void globalThemePackageCreator::parseConfig()
+bool globalThemePackageCreator::parseConfig()
 {
     workDir.mkdir("DEBIAN");
-    QDir controlPath(workDir.filePath("DEBIAN"));
+    QDir controlPath(workDir.absoluteFilePath("DEBIAN"));
 
-    handleConfigFile(":/templates/control", controlPath.filePath("control"));
-    QFile controlFile(controlPath.filePath("control"));
+    handleConfigFile(":/templates/control", controlPath.absoluteFilePath("control"));
+    QFile controlFile(controlPath.absoluteFilePath("control"));
     auto rawPermission = controlFile.permissions();
     controlFile.setPermissions(rawPermission | QFileDevice::Permission::WriteOwner);
     controlFile.open(QIODevice::WriteOnly | QIODevice::Append);
@@ -293,6 +342,7 @@ void globalThemePackageCreator::parseConfig()
     controlOut << "\n";
     controlFile.setPermissions(rawPermission);
     controlFile.close();
+    return true;
 }
 
 // kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

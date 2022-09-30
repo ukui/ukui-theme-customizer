@@ -94,8 +94,11 @@ void UKUIThemeCustomizer::onIconAddPressed()
         return;
     }
     creator = new iconPackageCreator(iconConfigFile);
-    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
-        iconModel.addItem(info.baseName(), info.absolutePath());
+    connect(creator, &packageCreator::packageDone, [&]() {
+        if (creator->getState() == packageCreator::packageState::Success) {
+            iconModel.addItem(creator->getFileInfo().baseName(), creator->getFileInfo().absoluteFilePath());
+        }
+
         creatorMutex.unlock();
     });
     creator->exec();
@@ -117,8 +120,10 @@ void UKUIThemeCustomizer::onCursorAddPressed()
         return;
     }
     creator = new cursorPackageCreator(cursorConfigFile);
-    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
-        cursorModel.addItem(info.baseName(), info.absolutePath());
+    connect(creator, &packageCreator::packageDone, [&]() {
+        if (creator->getState() == packageCreator::packageState::Success) {
+            cursorModel.addItem(creator->getFileInfo().baseName(), creator->getFileInfo().absoluteFilePath());
+        }
         creatorMutex.unlock();
     });
     creator->exec();
@@ -140,8 +145,10 @@ void UKUIThemeCustomizer::onWallpaperCollectionAddPressed()
         return;
     }
     creator = new wallpaperCollectionPackageCreator(wallpaperCollectionList);
-    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
-        wallpaperCollectionModel.addItem(info.baseName(), info.absolutePath());
+    connect(creator, &packageCreator::packageDone, [&]() {
+        if (creator->getState() == packageCreator::packageState::Success) {
+            wallpaperCollectionModel.addItem(creator->getFileInfo().baseName(), creator->getFileInfo().absoluteFilePath());
+        }
         creatorMutex.unlock();
     });
     creator->exec();
@@ -164,8 +171,10 @@ void UKUIThemeCustomizer::onSoundAddPressed()
         return;
     }
     creator = new soundPackageCreator(soundCollectionConfigFile);
-    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
-        soundModel.addItem(info.baseName(), info.absolutePath());
+    connect(creator, &packageCreator::packageDone, [&]() {
+        if (creator->getState() == packageCreator::packageState::Success) {
+            soundModel.addItem(creator->getFileInfo().baseName(), creator->getFileInfo().absoluteFilePath());
+        }
         creatorMutex.unlock();
     });
     creator->exec();
@@ -195,6 +204,35 @@ void UKUIThemeCustomizer::onQtStyleDeletePressed()
         m_ui->qtStyleView->selectionModel()->selectedIndexes());
 }
 
+void UKUIThemeCustomizer::onGlobalThemeAddPressed()
+{
+    globalThemeCreator globalCreator(&wallpaperCollectionModel, &iconModel,
+                                     &cursorModel, &soundModel, &gtkStyleModel,
+                                     &qtStyleModel);
+    globalCreator.exec();
+    auto depends = globalCreator.getDepends();
+    if (!globalCreator.isReadyToPackage()) return;
+
+    if (!creatorMutex.try_lock()) {
+        logger::getStandardLogger().log("请等待当前任务完成");
+        return;
+    }
+    creator = new globalThemePackageCreator(depends);
+    connect(creator, &packageCreator::packageDone, [&]() {
+        if (creator->getState() == packageCreator::packageState::Success) {
+            globalThemeModel.addItem(creator->getFileInfo().baseName(), creator->getFileInfo().absoluteFilePath());
+        }
+        creatorMutex.unlock();
+    });
+    creator->exec();
+}
+
+void UKUIThemeCustomizer::onGlobalThemeDeletePressed()
+{
+    globalThemeModel.deleteItem(
+        m_ui->globalThemeView->selectionModel()->selectedIndexes());
+}
+
 void UKUIThemeCustomizer::onCursorAddExistingPressed()
 {
     auto debFile = QFileDialog::getOpenFileName(this, tr("打开Debian包"), "./",
@@ -214,11 +252,11 @@ void UKUIThemeCustomizer::onCursorAddExistingPressed()
 
     if (!settingManager::getSettings().cursorDir().exists(name + ".deb")) {
         QFile::copy(
-            debFileInfo.filePath(),
-            settingManager::getSettings().cursorDir().filePath(name + ".deb"));
+            debFileInfo.absoluteFilePath(),
+            settingManager::getSettings().cursorDir().absoluteFilePath(name + ".deb"));
     }
     cursorModel.addItem(
-        name, settingManager::getSettings().cursorDir().filePath(name + ".deb"));
+        name, settingManager::getSettings().cursorDir().absoluteFilePath(name + ".deb"));
 }
 
 void UKUIThemeCustomizer::onWallpaperCollectionAddExistingPressed()
@@ -240,12 +278,12 @@ void UKUIThemeCustomizer::onWallpaperCollectionAddExistingPressed()
 
     if (!settingManager::getSettings().wallpaperCollectionDir().exists(name +
             ".deb")) {
-        QFile::copy(debFileInfo.filePath(),
-                    settingManager::getSettings().wallpaperCollectionDir().filePath(
+        QFile::copy(debFileInfo.absoluteFilePath(),
+                    settingManager::getSettings().wallpaperCollectionDir().absoluteFilePath(
                         name + ".deb"));
     }
     wallpaperCollectionModel.addItem(
-        name, settingManager::getSettings().wallpaperCollectionDir().filePath(
+        name, settingManager::getSettings().wallpaperCollectionDir().absoluteFilePath(
             name + ".deb"));
 }
 
@@ -268,11 +306,11 @@ void UKUIThemeCustomizer::onIconAddExistingPressed()
 
     if (!settingManager::getSettings().iconDir().exists(name + ".deb")) {
         QFile::copy(
-            debFileInfo.filePath(),
-            settingManager::getSettings().iconDir().filePath(name + ".deb"));
+            debFileInfo.absoluteFilePath(),
+            settingManager::getSettings().iconDir().absoluteFilePath(name + ".deb"));
     }
     iconModel.addItem(
-        name, settingManager::getSettings().iconDir().filePath(name + ".deb"));
+        name, settingManager::getSettings().iconDir().absoluteFilePath(name + ".deb"));
 }
 
 void UKUIThemeCustomizer::onSoundAddExistingPressed()
@@ -294,11 +332,11 @@ void UKUIThemeCustomizer::onSoundAddExistingPressed()
 
     if (!settingManager::getSettings().soundDir().exists(name + ".deb")) {
         QFile::copy(
-            debFileInfo.filePath(),
-            settingManager::getSettings().soundDir().filePath(name + ".deb"));
+            debFileInfo.absoluteFilePath(),
+            settingManager::getSettings().soundDir().absoluteFilePath(name + ".deb"));
     }
     soundModel.addItem(
-        name, settingManager::getSettings().soundDir().filePath(name + ".deb"));
+        name, settingManager::getSettings().soundDir().absoluteFilePath(name + ".deb"));
 }
 
 void UKUIThemeCustomizer::onGtkStyleAddExistingPressed()
@@ -320,12 +358,12 @@ void UKUIThemeCustomizer::onGtkStyleAddExistingPressed()
 
     if (!settingManager::getSettings().gtkStyleDir().exists(name + ".deb")) {
         QFile::copy(
-            debFileInfo.filePath(),
-            settingManager::getSettings().gtkStyleDir().filePath(name + ".deb"));
+            debFileInfo.absoluteFilePath(),
+            settingManager::getSettings().gtkStyleDir().absoluteFilePath(name + ".deb"));
     }
     gtkStyleModel.addItem(
         name,
-        settingManager::getSettings().gtkStyleDir().filePath(name + ".deb"));
+        settingManager::getSettings().gtkStyleDir().absoluteFilePath(name + ".deb"));
 }
 
 void UKUIThemeCustomizer::onQtStyleAddExistingPressed()
@@ -347,11 +385,11 @@ void UKUIThemeCustomizer::onQtStyleAddExistingPressed()
 
     if (!settingManager::getSettings().qtStyleDir().exists(name + ".deb")) {
         QFile::copy(
-            debFileInfo.filePath(),
-            settingManager::getSettings().qtStyleDir().filePath(name + ".deb"));
+            debFileInfo.absoluteFilePath(),
+            settingManager::getSettings().qtStyleDir().absoluteFilePath(name + ".deb"));
     }
     qtStyleModel.addItem(
-        name, settingManager::getSettings().qtStyleDir().filePath(name + ".deb"));
+        name, settingManager::getSettings().qtStyleDir().absoluteFilePath(name + ".deb"));
 }
 
 void UKUIThemeCustomizer::onGlobalThemeAddExistingPressed()
@@ -373,39 +411,12 @@ void UKUIThemeCustomizer::onGlobalThemeAddExistingPressed()
 
     if (!settingManager::getSettings().globalThemeDir().exists(name + ".deb")) {
         QFile::copy(
-            debFileInfo.filePath(),
-            settingManager::getSettings().globalThemeDir().filePath(name + ".deb"));
+            debFileInfo.absoluteFilePath(),
+            settingManager::getSettings().globalThemeDir().absoluteFilePath(name + ".deb"));
     }
     qtStyleModel.addItem(
         name,
-        settingManager::getSettings().globalThemeDir().filePath(name + ".deb"));
-}
-
-void UKUIThemeCustomizer::onGlobalThemeAddPressed()
-{
-    globalThemeCreator globalCreator(&wallpaperCollectionModel, &iconModel,
-                                     &cursorModel, &soundModel, &gtkStyleModel,
-                                     &qtStyleModel);
-    globalCreator.exec();
-    auto depends = globalCreator.getDepends();
-    if (!globalCreator.isReadyToPackage()) return;
-
-    if (!creatorMutex.try_lock()) {
-        logger::getStandardLogger().log("请等待当前任务完成");
-        return;
-    }
-    creator = new globalThemePackageCreator(depends);
-    connect(creator, &packageCreator::packageSuccess, [&](const QFileInfo & info) {
-        globalThemeModel.addItem(info.baseName(), info.absolutePath());
-        creatorMutex.unlock();
-    });
-    creator->exec();
-}
-
-void UKUIThemeCustomizer::onGlobalThemeDeletePressed()
-{
-    globalThemeModel.deleteItem(
-        m_ui->globalThemeView->selectionModel()->selectedIndexes());
+        settingManager::getSettings().globalThemeDir().absoluteFilePath(name + ".deb"));
 }
 
 // kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;

@@ -32,21 +32,21 @@ settingManager::settingManager()
     } else {
         settingsFromFile = new QSettings("config.ini", QSettings::IniFormat);
     }
-    auto filePath = settingsFromFile->value("workDirectory", "./").toString();
-    if (!QFileInfo(filePath).isDir()) {
-        QFile::remove(filePath);
+    auto absoluteFilePath = settingsFromFile->value("workDirectory", "./").toString();
+    if (!QFileInfo(absoluteFilePath).isDir()) {
+        QFile::remove(absoluteFilePath);
     }
-    if (!QFile::exists(filePath)) {
-        QDir().mkdir(filePath);
+    if (!QFile::exists(absoluteFilePath)) {
+        QDir().mkdir(absoluteFilePath);
     }
-    settings.totalWorkDir.setPath(filePath);
+    settings.totalWorkDir.setPath(absoluteFilePath);
 
     for (auto subDir : {
                 "icons", "cursors", "globalThemes", "wallpaperCollections", "gtkStyles",
                 "qtStyles", "sounds"
             }) {
-        if (!QFileInfo(settings.totalWorkDir.filePath(subDir)).isDir()) {
-            QFile::remove(settings.totalWorkDir.filePath(subDir));
+        if (!QFileInfo(settings.totalWorkDir.absoluteFilePath(subDir)).isDir()) {
+            QFile::remove(settings.totalWorkDir.absoluteFilePath(subDir));
         }
         if (!settings.totalWorkDir.exists(subDir))
             settings.totalWorkDir.mkdir(subDir);
@@ -55,37 +55,37 @@ settingManager::settingManager()
 
 QDir settingManager::iconDir()
 {
-    return QDir(totalWorkDir.filePath("icons"));
+    return QDir(totalWorkDir.absoluteFilePath("icons"));
 }
 
 QDir settingManager::cursorDir()
 {
-    return QDir(totalWorkDir.filePath("cursors"));
+    return QDir(totalWorkDir.absoluteFilePath("cursors"));
 }
 
 QDir settingManager::globalThemeDir()
 {
-    return QDir(totalWorkDir.filePath("globalThemes"));
+    return QDir(totalWorkDir.absoluteFilePath("globalThemes"));
 }
 
 QDir settingManager::wallpaperCollectionDir()
 {
-    return QDir(totalWorkDir.filePath("wallpaperCollections"));
+    return QDir(totalWorkDir.absoluteFilePath("wallpaperCollections"));
 }
 
 QDir settingManager::gtkStyleDir()
 {
-    return QDir(totalWorkDir.filePath("gtkStyles"));
+    return QDir(totalWorkDir.absoluteFilePath("gtkStyles"));
 }
 
 QDir settingManager::qtStyleDir()
 {
-    return QDir(totalWorkDir.filePath("qtStyles"));
+    return QDir(totalWorkDir.absoluteFilePath("qtStyles"));
 }
 
 QDir settingManager::soundDir()
 {
-    return QDir(totalWorkDir.filePath("sounds"));
+    return QDir(totalWorkDir.absoluteFilePath("sounds"));
 }
 
 // kate: indent-mode cstyle; indent-width 4; replace-tabs on; ;
